@@ -27,9 +27,9 @@ navbar = dbc.NavbarSimple(
 message = html.Div(style={'textAlign':'center','fontSize':'80px','width':'100%','height':'100%'},
 children = "Hello Users")
 app.layout = html.Div(
-    style={'background':'Gray','width':'100%','height':'100%'},
+    style={'background':'Gray','width':'100%','height':'100%','margin':'0px'},
     children = [navbar,message]
     )
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server()
