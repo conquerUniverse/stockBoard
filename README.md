@@ -1,8 +1,15 @@
 # Stocks Analysis
 tools to analyse stock market and further research
 
-# Why Dash Over Bokeh ?
-- https://www.sicara.ai/blog/2018-01-30-bokeh-dash-best-dashboard-framework-python
+# How to run
+- Run the file 
+```bash
+python app.py
+```
+- go to the link http://127.0.0.1:8050/
+
+# Imp Links
+- https://dash-bootstrap-components.opensource.faculty.ai/docs/components/navbar/
 
 # References
 - https://pbpython.com/interactive-dashboards.html
