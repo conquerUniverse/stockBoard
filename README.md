@@ -10,6 +10,7 @@ python app.py
 
 # Imp Links
 - https://dash-bootstrap-components.opensource.faculty.ai/docs/components/navbar/
+- choosealicense.com
 
 # References
 - https://pbpython.com/interactive-dashboards.html
@@ -20,3 +21,15 @@ python app.py
 - [ ] create Jupyter Dashboard
 - [ ] Link the API
 - [ ] Test the Funcitonality
+
+
+# learning
+- os.path.join()
+
+- def j(**kwargs):
+- d ={'dsf':'fs'}
+- j(**d)
+
+- datetime.now().strftime("%Y%m%d")
+
+- pd.DataFrame(list(sellData.values()),sellData.keys()).T
