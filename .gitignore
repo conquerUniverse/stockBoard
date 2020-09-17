@@ -1,4 +1,4 @@
 .pytest_cache
 .vscode
 StockBoard.egg-info
-*.__pycache__
+*/.__pycache__
