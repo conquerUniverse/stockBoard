@@ -1,5 +1,0 @@
-[
-  "test/test_basic.py::test_sanity_run",
-  "test/test_basic.py::test_dataLoad",
-  "test/test_basic.py::test_dataLoad_invalid_location"
-]

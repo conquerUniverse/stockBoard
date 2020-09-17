@@ -37,3 +37,5 @@ python app.py
 - alias pip=/path/to/system/pip
 - source ~/.bashrc rerun the file
 - create adn run setup.py to install packages. [imp]
+
+- git rm -r --cached .
