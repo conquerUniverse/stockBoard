@@ -38,4 +38,4 @@ python app.py
 - source ~/.bashrc rerun the file
 - create adn run setup.py to install packages. [imp]
 
-- git rm -r --cached .
+- git rm -r --cached . [fixes gitignore issue]
