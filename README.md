@@ -33,3 +33,7 @@ python app.py
 - datetime.now().strftime("%Y%m%d")
 
 - pd.DataFrame(list(sellData.values()),sellData.keys()).T
+
+- alias pip=/path/to/system/pip
+- source ~/.bashrc rerun the file
+- create adn run setup.py to install packages. [imp]

@@ -1,16 +1,17 @@
 # Basic Tests Of Core functionality
-# import pytest
+import pytest
 
-# import scripts
-# import scripts
+from scripts.StockData import StockData
 
-# @pytest.fixture
-# def sd():
-#     yield StockData
 
 def test_sanity_run():
     assert 2==2
 
-# def test_dataLoad():
-#     sd = scripts.StockData
-#     assert sd.load(),"load failed"
+def test_dataLoad():
+    sd = StockData('alvin369')
+    sd.load()
+    assert sd.isDataLoaded,"load failed"
+
+def test_dataLoad_invalid_location():
+    with pytest.raises(AssertionError):
+        StockData('xxxxx')

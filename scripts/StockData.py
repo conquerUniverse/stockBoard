@@ -2,18 +2,20 @@
 import os
 import pandas as pd
 from datetime import datetime
+import pytest
 class StockData:
-    def __init__(self,location = "../data/"):
+    def __init__(self,username = '', location = "profiles/"):
         self.Buy = None
         self.Sell = None
         self.Invest = None
         
-        assert os.path.isdir('../data') == True,"../data folder not found"
+        self.location = os.path.join(location,username)
+        assert os.path.isdir(self.location) == True, self.location+" path not found"
         self.isDataLoaded = False
-        self.location = location
+        
     
     def load(self,):
-        """ Load the values form ./data folder"""
+        """ Load the values form ./profiles/<username> folder"""
         self.Buy = self.loadData('dfBuy.csv')
         self.Sell = self.loadData('dfSell.csv')
         self.Invest = self.loadData('dfInvest.csv')
@@ -28,9 +30,9 @@ class StockData:
         return dic[category]
         
     def loadData(self,s):
-
-        assert os.path.isfile(self.location+s) == True,f"{self.location+s} file not found "
-        return pd.read_csv(self.location+s)
+        loc = os.path.join(self.location,s)
+        assert os.path.isfile(loc) == True,f"{loc} file not found "
+        return pd.read_csv(loc)
 
     def parseCategory(self,category):
         """ Parse the category in correct format [standard]"""
