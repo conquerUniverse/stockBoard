@@ -43,3 +43,4 @@ python app.py
 
 - git checkout remotes/origin/prod  # shift to this branch
 - git merge master                  # merge both
+- git reflog            # all history
