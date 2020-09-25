@@ -20,7 +20,7 @@ class StockData:
         self.Sell = self.loadData('dfSell.csv')
         self.Invest = self.loadData('dfInvest.csv')
         self.isDataLoaded = True
-        print("Files Successfully loaded")
+        # print("Files Successfully loaded")
     
     def getData(self,category):
         assert self.isDataLoaded,"Data is not loaded"

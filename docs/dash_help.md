@@ -14,3 +14,10 @@ Table styling conditions
 6. style_header
 7. style_cell_conditional
 8. style_cell
+
+
+
+- multipage app
+- use a common Dash().app
+- on subpages don't use app.layout
+- use the pages as a python modules
