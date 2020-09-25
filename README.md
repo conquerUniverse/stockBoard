@@ -39,3 +39,4 @@ python app.py
 - create adn run setup.py to install packages. [imp]
 
 - git rm -r --cached . [fixes gitignore issue]
+- [procfile of heroku](https://devcenter.heroku.com/articles/procfile)

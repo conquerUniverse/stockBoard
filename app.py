@@ -5,6 +5,8 @@ import dash_html_components as html
 import dash_core_components as dcc
 import dash_table
 from dash.dependencies import Input, Output
+from app import server
+
 
 # stockBorad lib imports
 from scripts.StockBoard import StockBoard
@@ -150,4 +152,4 @@ app.layout = html.Div(
     )
 
 if __name__ == '__main__':
-    app.run_server(debug = True)
+    app.run_server()
