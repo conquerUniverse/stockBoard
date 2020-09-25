@@ -17,3 +17,4 @@ coverage.xml
 
 
 .ipynb_checkpoints
+scripts/__pycache__/StockData.cpython-37.pyc
