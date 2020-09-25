@@ -40,3 +40,6 @@ python app.py
 
 - git rm -r --cached . [fixes gitignore issue]
 - [procfile of heroku](https://devcenter.heroku.com/articles/procfile)
+
+- git checkout remotes/origin/prod  # shift to this branch
+- git merge master                  # merge both
