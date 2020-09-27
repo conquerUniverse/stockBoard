@@ -17,4 +17,4 @@ coverage.xml
 
 
 .ipynb_checkpoints
-test/testing.py
+./test/testing.py
