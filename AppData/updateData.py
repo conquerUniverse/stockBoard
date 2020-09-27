@@ -15,7 +15,7 @@ from app import app
 import os
 
 
-username = 'alvin369'
+username = 'alvin369' # lets fix this here for now
 
 sd = StockData(username=username) # default value 
 
@@ -39,9 +39,151 @@ content = dbc.Container(
             id="tabs",
             active_tab="buy",
         ),
-        html.Div(id="tab-content", className="p-4"),
+        dbc.Container(id="tab-content", className="p-4"),
     ]
 )
+
+
+
+def tableView(data):
+
+    var = dash_table.DataTable(
+    id='table',
+    columns=[{"name": i, "id": i} for i in data.columns],
+    data=data.to_dict('records'),
+
+    style_header = {
+        'backgroundColor': 'rgb(40, 20, 100)',
+        'color': 'white'
+    }
+    ,
+    style_data_conditional=[{
+        'if': {'column_id': ['Name','TotalCost','Amount']
+        },
+        'backgroundColor': 'rgb(10, 100, 30)',
+        'color': 'white'
+    }],
+
+    style_data = {
+        'backgroundColor': 'rgb(60, 50, 40)',
+        'color': 'white'
+    },
+
+    style_cell_conditional=[
+            {'if': {'column_id': 'title'},
+            'width': '200px'},
+            {'if': {'column_id': 'post'},
+            'width': '670px'
+            ,'height':'auto'},
+        ],
+
+    style_cell={
+            'overflow': 'hidden',
+            'textOverflow': 'ellipsis',
+            'maxWidth': '50px'
+        }
+
+    ,style_table={
+    'maxHeight': '50%'
+    ,'overflowY': 'auto'
+    },
+    )
+    return var
+
+
+
+def addStructuredData(category):
+    print(category)
+    nameAndDate = dbc.FormGroup(
+            [   dbc.Row(
+                [dbc.Label("Name", className="mr-2",width = 4),
+                dbc.Input( placeholder="Enter Name",)],                
+            style = {"width":"50%"} ),
+                dbc.Row(
+                [dbc.Label("Date", className="mr-2"),
+                dbc.Input( type="date")] ,
+            style = {"width":"50%"} 
+                )
+                
+            ],
+            className="mr-3",
+            row = True,
+            style = {"width":"100%"}
+            )
+
+
+    numberAndPriceOfStock = dbc.FormGroup(
+            [   dbc.Row(
+                [dbc.Label("NumberOfStocks", className="mr-2",width = 4),
+                dbc.Input(type="number", placeholder="No. of stock")],
+                
+            style = {"width":"50%"} ),
+
+                dbc.Row(
+                [dbc.Label("Price/Stock", className="mr-2"),
+                dbc.Input(type='number')] ,
+
+            style = {"width":"50%"} 
+                )
+                
+            ],
+            className="mr-3",
+            row = True,
+            style = {"width":"100%"}
+            )
+
+    totalCostAndExtraCharge = dbc.FormGroup(
+            [   dbc.Row(
+                [dbc.Label("TotalCost", className="mr-2",width = 4),
+                dbc.Input(type="number", placeholder="No. of stock")],
+                
+            style = {"width":"50%"} ),
+
+                dbc.Row(
+                [dbc.Label("ExtraCharge", className="mr-2",width = 4),
+                dbc.Input(type='number')] ,
+
+            style = {"width":"50%"} 
+                )
+                
+            ],
+            className="mr-3",
+            row = True,
+            style = {"width":"100%"}
+            )
+
+    submitButton = dbc.Row([dbc.Button("Submit", color="primary"),
+                        dbc.Input(type="text", placeholder="enter Passwd")],justify="center")
+
+    investForm = dbc.FormGroup(
+            [   dbc.Row(
+                [dbc.Label("Amount", className="mr-2",width = 4),
+                dbc.Input(type="number", placeholder="No. of stock")],
+                
+            style = {"width":"50%"} ),
+
+                dbc.Row(
+                [dbc.Label("Date", className="mr-2",width = 4),
+                dbc.Input(type='date')] ,
+
+            style = {"width":"50%"} 
+                ),
+                dbc.Row(
+                [dbc.Label("Description", className="mr-2",width = 4),
+                dbc.Input(type='text',value="add")] ,
+
+            style = {"width":"50%"} 
+                )
+                
+            ],
+            className="mr-3",
+            row = True,
+            style = {"width":"100%"}
+            )
+    if category == "invest" :
+        return dbc.Form( [investForm,submitButton],inline=True )
+    else:
+        return  dbc.Form( [nameAndDate, numberAndPriceOfStock,totalCostAndExtraCharge,submitButton] ,inline=True)
 
 
 @app.callback(
@@ -54,52 +196,14 @@ def render_tab_content(active_tab, data=1):
     stored graphs, and renders the tab content depending on what the value of
     'active_tab' is.
     """
-    print(active_tab,data )
+    # print(active_tab,data )
     if active_tab and data is not None:
         # print("enter")
-        data = buyData = sd.getData(active_tab)
-        table =  dash_table.DataTable(
-            id='table',
-            columns=[{"name": i, "id": i} for i in data.columns],
-            data=data.to_dict('records'),
-
-            style_header = {
-                'backgroundColor': 'rgb(40, 20, 100)',
-                'color': 'white'
-            }
-            ,
-            style_data_conditional=[{
-                'if': {'column_id': ['Name','TotalCost','Amount']
-                },
-                'backgroundColor': 'rgb(10, 100, 30)',
-                'color': 'white'
-            }],
-
-            style_data = {
-                'backgroundColor': 'rgb(60, 50, 40)',
-                'color': 'white'
-            },
-
-            style_cell_conditional=[
-                    {'if': {'column_id': 'title'},
-                    'width': '200px'},
-                    {'if': {'column_id': 'post'},
-                    'width': '670px'
-                    ,'height':'auto'},
-                ],
-
-            style_cell={
-                    'overflow': 'hidden',
-                    'textOverflow': 'ellipsis',
-                    'maxWidth': '50px'
-                }
-            # ,style_table={
-            # 'maxHeight': '700px'
-            # ,'overflowY': 'scroll'
-            # },
-        )
-
-        return table
+        data  = sd.getData(active_tab)
+        table =  tableView(data)
+        form = addStructuredData(active_tab)
+        # return form
+        return dbc.Container([table,html.Hr(),html.H3("Update "+str(active_tab)+" Data"),form])
     return html.H1("No tab selected")
 
 noteToSelf = dbc.InputGroup(
@@ -130,5 +234,5 @@ def nts_save_to_file(n_clicks,value):
 
 
 layout = html.Div(
-    children = [content,noteToSelf]
+    children = [content]
     )
