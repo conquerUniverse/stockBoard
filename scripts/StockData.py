@@ -8,9 +8,9 @@ class StockData:
         self.Buy = None
         self.Sell = None
         self.Invest = None
-        
+        self.username = username
         self.location = os.path.join(location,username)
-        assert os.path.isdir(self.location) == True, self.location+" path not found"
+        assert os.path.isdir(self.location) == True, self.location+" path not found \n curr path"+str(os.curdir)
         self.isDataLoaded = False
         
     
@@ -27,7 +27,20 @@ class StockData:
 
         category = self.parseCategory(category)
         dic = {'buy':self.Buy, 'sell':self.Sell, 'invest':self.Invest}
-        return dic[category]
+        return dic[category].sort_values(by='Date',ascending=False)
+
+    def appendData_(self,category,new_df):
+        assert self.isDataLoaded,"Data is not loaded"
+
+        category = self.parseCategory(category)
+        if category == 'buy':
+            self.Buy = self.Buy.append(new_df,ignore_index = True)
+        elif category == 'sell':
+            self.Sell= self.Sell.append(new_df,ignore_index = True)
+        elif category == 'invest':
+            self.Invest= self.Invest.append(new_df,ignore_index = True)
+        else:
+            raise "You should never be  here"
         
     def loadData(self,s):
         loc = os.path.join(self.location,s)
@@ -80,15 +93,13 @@ class StockData:
         structure = self.getDataStructure(category)
 
         self.checkStructureMapping(structure,kwargs)
-        df = self.getData(category)
         new_df = pd.DataFrame(list(kwargs.values()),kwargs.keys()).T
-        df = df.append(new_df,ignore_index = True)
-
-        # df updated
-        print(df)
+        self.appendData_(category,new_df)
+        
         
         
     def updateData(self,category,loc=None):
+        """Actual update data and write in Disc """
         loc =  self.location if loc == None else loc 
 
         category = self.parseCategory(category)
@@ -97,8 +108,7 @@ class StockData:
                     "invest":"dfInvest.csv"
                     }
         name = mapping[category]
-
-        loc = os.path.join(loc,name)
+        self.getData(category).to_csv(os.path.join(loc,name),index=False)
 
         print(f"{category} updated in {loc} sucessfully")
 
