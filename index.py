@@ -8,6 +8,8 @@ from dash.dependencies import Input, Output, State
 
 from app import app
 from AppData import updateData,dashBoard,analysis
+#from app import server
+
 
 # stockBorad lib imports
 from scripts.StockBoard import StockBoard
@@ -177,4 +179,5 @@ def display_page(pathname):
 
 
 
+#app.run_server()
 server = app.server
