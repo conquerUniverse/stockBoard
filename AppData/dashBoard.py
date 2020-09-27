@@ -7,6 +7,6 @@ from dash.dependencies import Input, Output, State
 
 # from app.app_init import app
 
-# app = dash.Dash()
-layout = dbc.Container(["Hi Everyone"])
-# app.run_server()
+layout = dbc.Jumbotron(
+    "Hi This is the front page.."
+    )
