@@ -73,24 +73,25 @@ def tableView(data):
 
     style_cell_conditional=[
             {'if': {'column_id': 'title'},
-            'width': '200px'},
+            'width': '100px'},
             {'if': {'column_id': 'post'},
-            'width': '670px'
+            'width': '200px'
             ,'height':'auto'},
         ],
 
     style_cell={
             'overflow': 'hidden',
             'textOverflow': 'ellipsis',
-            'maxWidth': '50px'
+            'maxWidth': '1px',
+            'textAlign':"center"
         }
 
     ,style_table={
-    'maxHeight': '50%'
+    'maxHeight': '300px'
     ,'overflowY': 'auto'
     },
     )
-    return var
+    return dbc.Container(var)
 
 
 
@@ -102,9 +103,10 @@ def addStructuredData(category):
                 dbc.Input( placeholder="Enter Name",id="name")],                
             style = {"width":"50%"} ),
                 dbc.Row(
-                [dbc.Label("Date", className="mr-2"),
+                [dbc.Label("Date", className="mr-2",width = 4),
                 dbc.Input( type="date",id="date")] ,
-            style = {"width":"50%"} 
+            style = {"width":"50%"} ,
+            
                 )
                 
             ],
@@ -123,7 +125,7 @@ def addStructuredData(category):
             style = {"width":"50%"} ),
 
                 dbc.Row(
-                [dbc.Label("Price/Stock", className="mr-2"),
+                [dbc.Label("Price/Stock", className="mr-2",width = 4),
                 dbc.Input(type='number',id="price")] ,
 
             style = {"width":"50%"} 
@@ -192,7 +194,7 @@ def addStructuredData(category):
     saveData = dbc.Button("Save Data", color="success",n_clicks = 0,id="saveData")
     
     buySellForm = html.Div(dbc.FormGroup([nameAndDate, numberAndPriceOfStock,totalCostAndExtraCharge]),id="buySellForm")
-    investForm = html.Div(dbc.FormGroup([investForm,]),id="investForm")
+    investForm = html.Div(dbc.FormGroup([investForm,]),id="investForm",hidden=True)
     return  dbc.Form( [buySellForm,investForm,
                 dbc.FormGroup([password,submitButton]),html.Hr(),saveData
             ] ,inline=True)
@@ -210,6 +212,32 @@ def saveDataCallBack(_,category):
     else:
         sd.updateData(category=category)
         return category+" Values updated Successfully",True
+
+
+def putData(category,*args):
+    if not all(args[:6]) and not all(args[6:]):
+        return False
+    dataInvest = { 
+                    "Amount":args[6],
+                    "Date":args[7],
+                    "Description":args[8],
+                    }
+    data = {"Name":args[0],
+            "NumberOfStocks":args[1],
+            "Date":args[3],
+            "TotalCost":args[4],
+            "ExtraCharges":args[5],
+            }
+    if category == "invest":
+        sd.addData(category,**dataInvest)
+        return True
+    mapping = {"buy":"BuyingPrice","sell":"SellingPrice"}
+    
+    d = {**data,**{mapping[category]:args[2]}}
+    sd.addData(category,**d)
+    return True
+
+
 
 # update data BuySell
 @app.callback(
@@ -230,58 +258,31 @@ def saveDataCallBack(_,category):
 
     Input("amountInvest","value"),
     Input("dateInvest","value"),
-    Input("descInvest","value"),
+    Input("descInvest","value"), #9
 
 
-    Input("tabs","active_tab")
+    Input("tabs","active_tab") # access as args[-1]
     ]
 )
 def updateForm(*args):
     defaultMessage = "This is a status Bar"
-    if args[-1] == "buy":
-        if ischanged(args[0]):
-            return (defaultMessage,False,True)
-        if all(args[:7]):
-            data = {"Name":args[1],
-                    "NumberOfStocks":args[2],
-                    "BuyingPrice":args[3],
-                    "Date":args[4],
-                    "TotalCost":args[5],
-                    "ExtraCharges":args[6],
-                    }
-            sd.addData(args[-1],**data)
-            return ("Buy Data updates",False,True)
+    if ischanged(args[0]): # submit button is pressed
+        print(args[-1])
+        if putData(args[-1],*args[1:-1]):
+            return (args[-1]+" Data is updated",formToggle(args[-1]),not formToggle(args[-1]))
         else:
-            return ("Please fill all entries",False,True)
-
-    elif args[-1] == "sell":
-        if ischanged(args[0]):
-            return (defaultMessage,False,True)
-        if all(args[:7]):
-            data = {"Name":args[1],
-                    "NumberOfStocks":args[2],
-                    "SellingPrice":args[3],
-                    "Date":args[4],
-                    "TotalCost":args[5],
-                    "ExtraCharges":args[6],
-                    }
-            sd.addData(args[-1],**data)
-            return ("Sell Data updates",False,True)
-        else:
-            return ("Please fill all entries",False,True)
-    
+            return ("Please fill all entries",formToggle(args[-1]),not formToggle(args[-1]))
     else:
-        if ischanged(args[0]):
-            return (defaultMessage,True,False)
-        if all(args[7:-1]):
-            data = {  "Amount":args[7],
-                    "Date":args[8],
-                    "Description":args[9],
-                    }
-            sd.addData(args[-1],**data)
-            return ("Invest Data updates",True,False)
-        else:
-            return ("Please fill all entries",True,False)
+        return (defaultMessage,formToggle(args[-1]),not formToggle(args[-1]))
+
+
+
+def formToggle(x):
+    if x == "invest":
+        return True
+    return False
+
+
 
 pastButton = 0
 def ischanged(x):
@@ -289,9 +290,9 @@ def ischanged(x):
     print(pastButton,x)
     if x != pastButton:
         pastButton = x
-        return False
-    else:
         return True
+    else:
+        return False
 
 
 
