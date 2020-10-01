@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash
 
-external_stylesheets = [dbc.themes.SUPERHERO]
+external_stylesheets = [dbc.themes.SKETCHY]
 
 app = dash.Dash(__name__, 
 external_stylesheets=external_stylesheets,
@@ -63,6 +63,28 @@ def toggle_navbar_collapse(n, is_open):
         return not is_open
     return is_open
 
+forms = html.Div(dbc.Container([
+    dbc.Row([dbc.Label("Name"),dbc.Input(type="text")]),
+    dbc.Row([dbc.Label("work"),dbc.Input(type="text")])
+]),
+hidden=False,
 
-app.layout = dbc.Container(navbar)
+id = "disp"
+
+
+)
+
+button = html.Button("hide / unhide",id="butt",n_clicks=0)
+
+@app.callback(Output("disp","hidden"),
+Input("butt","n_clicks")
+)
+def run(c):
+    print(c,"hiding")
+    if c%2==0:
+        return True
+    else:
+        return False
+
+app.layout = dbc.Container([navbar,forms,button])
 app.run_server(debug=True)

@@ -15,13 +15,13 @@ from app import app
 import os
 
 
-username = 'alvin369' # lets fix this here for now
+username = 'fahim' # lets fix this here for now
 
 sd = StockData(username=username) # default value 
 
 sd.load() # load the data files
 
-noteToSelf = open(f"./profiles/{username}/noteToSelf.txt",'r').read()
+noteToSelf = open(f"./profiles/{username}/noteToSelf.txt",'w+').read()
 
 
 
@@ -39,6 +39,8 @@ content = dbc.Container(
             id="tabs",
             active_tab="buy",
         ),
+        dcc.ConfirmDialog(
+        id='messageSave' ),
         dbc.Container(id="tab-content", className="p-4"),
     ]
 )
@@ -71,38 +73,40 @@ def tableView(data):
 
     style_cell_conditional=[
             {'if': {'column_id': 'title'},
-            'width': '200px'},
+            'width': '100px'},
             {'if': {'column_id': 'post'},
-            'width': '670px'
+            'width': '200px'
             ,'height':'auto'},
         ],
 
     style_cell={
             'overflow': 'hidden',
             'textOverflow': 'ellipsis',
-            'maxWidth': '50px'
+            'maxWidth': '1px',
+            'textAlign':"center"
         }
 
     ,style_table={
-    'maxHeight': '50%'
+    'maxHeight': '300px'
     ,'overflowY': 'auto'
     },
     )
-    return var
+    return dbc.Container(var)
 
 
 
 def addStructuredData(category):
-    print(category)
+    # print(category)
     nameAndDate = dbc.FormGroup(
             [   dbc.Row(
                 [dbc.Label("Name", className="mr-2",width = 4),
-                dbc.Input( placeholder="Enter Name",)],                
+                dbc.Input( placeholder="Enter Name",id="name")],                
             style = {"width":"50%"} ),
                 dbc.Row(
-                [dbc.Label("Date", className="mr-2"),
-                dbc.Input( type="date")] ,
-            style = {"width":"50%"} 
+                [dbc.Label("Date", className="mr-2",width = 4),
+                dbc.Input( type="date",id="date")] ,
+            style = {"width":"50%"} ,
+            
                 )
                 
             ],
@@ -115,13 +119,14 @@ def addStructuredData(category):
     numberAndPriceOfStock = dbc.FormGroup(
             [   dbc.Row(
                 [dbc.Label("NumberOfStocks", className="mr-2",width = 4),
-                dbc.Input(type="number", placeholder="No. of stock")],
+                dbc.Input(type="number", placeholder="No. of stock",\
+                    id = "numberofstocks")],
                 
             style = {"width":"50%"} ),
 
                 dbc.Row(
-                [dbc.Label("Price/Stock", className="mr-2"),
-                dbc.Input(type='number')] ,
+                [dbc.Label("Price/Stock", className="mr-2",width = 4),
+                dbc.Input(type='number',id="price")] ,
 
             style = {"width":"50%"} 
                 )
@@ -135,13 +140,14 @@ def addStructuredData(category):
     totalCostAndExtraCharge = dbc.FormGroup(
             [   dbc.Row(
                 [dbc.Label("TotalCost", className="mr-2",width = 4),
-                dbc.Input(type="number", placeholder="No. of stock")],
+                dbc.Input(type="number", placeholder="Cost of transaction",\
+                    id="totalcost")],
                 
             style = {"width":"50%"} ),
 
                 dbc.Row(
                 [dbc.Label("ExtraCharge", className="mr-2",width = 4),
-                dbc.Input(type='number')] ,
+                dbc.Input(type='number',id= "extracharges")] ,
 
             style = {"width":"50%"} 
                 )
@@ -152,25 +158,23 @@ def addStructuredData(category):
             style = {"width":"100%"}
             )
 
-    submitButton = dbc.Row([dbc.Button("Submit", color="primary"),
-                        dbc.Input(type="text", placeholder="enter Passwd")],justify="center")
-
+   
     investForm = dbc.FormGroup(
             [   dbc.Row(
                 [dbc.Label("Amount", className="mr-2",width = 4),
-                dbc.Input(type="number", placeholder="No. of stock")],
+                dbc.Input(type="number", placeholder="amount added ",id="amountInvest")],
                 
             style = {"width":"50%"} ),
 
                 dbc.Row(
                 [dbc.Label("Date", className="mr-2",width = 4),
-                dbc.Input(type='date')] ,
+                dbc.Input(type='date',id="dateInvest")] ,
 
             style = {"width":"50%"} 
                 ),
                 dbc.Row(
                 [dbc.Label("Description", className="mr-2",width = 4),
-                dbc.Input(type='text',value="add")] ,
+                dbc.Input(type='text',value="add",id="descInvest")] ,
 
             style = {"width":"50%"} 
                 )
@@ -180,12 +184,119 @@ def addStructuredData(category):
             row = True,
             style = {"width":"100%"}
             )
-    if category == "invest" :
-        return dbc.Form( [investForm,submitButton],inline=True )
+
+
+    submitButton = dbc.Row([dbc.Button(f"{category.capitalize()} Stock", \
+        color="primary",n_clicks = 0,id="submit") ],justify="end")
+    
+
+    password = dbc.Input(type="text", placeholder="enter Passwd")                 
+    saveData = dbc.Button("Save Data", color="success",n_clicks = 0,id="saveData")
+    
+    buySellForm = html.Div(dbc.FormGroup([nameAndDate, numberAndPriceOfStock,totalCostAndExtraCharge]),id="buySellForm")
+    investForm = html.Div(dbc.FormGroup([investForm,]),id="investForm",hidden=True)
+    return  dbc.Form( [buySellForm,investForm,
+                dbc.FormGroup([password,submitButton]),html.Hr(),saveData
+            ] ,inline=True)
+
+# save Data
+@app.callback(
+    [Output("messageSave","message"),Output("messageSave","displayed")],
+    [Input("saveData","n_clicks"),
+    Input("tabs","active_tab")
+    ]
+)
+def saveDataCallBack(_,category):
+    if not  _:
+        return "all Fine",False
     else:
-        return  dbc.Form( [nameAndDate, numberAndPriceOfStock,totalCostAndExtraCharge,submitButton] ,inline=True)
+        sd.updateData(category=category)
+        return category+" Values updated Successfully",True
 
 
+def putData(category,*args):
+    if not all(args[:6]) and not all(args[6:]):
+        return False
+    dataInvest = { 
+                    "Amount":args[6],
+                    "Date":args[7],
+                    "Description":args[8],
+                    }
+    data = {"Name":args[0],
+            "NumberOfStocks":args[1],
+            "Date":args[3],
+            "TotalCost":args[4],
+            "ExtraCharges":args[5],
+            }
+    if category == "invest":
+        sd.addData(category,**dataInvest)
+        return True
+    mapping = {"buy":"BuyingPrice","sell":"SellingPrice"}
+    
+    d = {**data,**{mapping[category]:args[2]}}
+    sd.addData(category,**d)
+    return True
+
+
+
+# update data BuySell
+@app.callback(
+    [Output("message","children"),
+    Output("buySellForm","hidden"),
+    Output("investForm","hidden")
+    ],
+
+    [
+    Input("submit","n_clicks"),#0
+
+    Input("name","value"),
+    Input("numberofstocks","value"),
+    Input("price","value"),
+    Input("date","value"),
+    Input("totalcost","value"),
+    Input("extracharges","value"), #6
+
+    Input("amountInvest","value"),
+    Input("dateInvest","value"),
+    Input("descInvest","value"), #9
+
+
+    Input("tabs","active_tab") # access as args[-1]
+    ]
+)
+def updateForm(*args):
+    defaultMessage = "This is a status Bar"
+    if ischanged(args[0]): # submit button is pressed
+        print(args[-1])
+        if putData(args[-1],*args[1:-1]):
+            return (args[-1]+" Data is updated",formToggle(args[-1]),not formToggle(args[-1]))
+        else:
+            return ("Please fill all entries",formToggle(args[-1]),not formToggle(args[-1]))
+    else:
+        return (defaultMessage,formToggle(args[-1]),not formToggle(args[-1]))
+
+
+
+def formToggle(x):
+    if x == "invest":
+        return True
+    return False
+
+
+
+pastButton = 0
+def ischanged(x):
+    global pastButton
+    print(pastButton,x)
+    if x != pastButton:
+        pastButton = x
+        return True
+    else:
+        return False
+
+
+
+# Tab select view
 @app.callback(
     Output("tab-content", "children"),
     [Input("tabs", "active_tab")],
@@ -201,9 +312,13 @@ def render_tab_content(active_tab, data=1):
         # print("enter")
         data  = sd.getData(active_tab)
         table =  tableView(data)
-        form = addStructuredData(active_tab)
-        # return form
-        return dbc.Container([table,html.Hr(),html.H3("Update "+str(active_tab)+" Data"),form])
+        message = dbc.Alert("All Fine",id="message",color = "info")
+
+
+        form = dbc.Jumbotron([html.H2("Update "+str(active_tab)+" Data",className="display-5"),
+                                    html.Br(),addStructuredData(active_tab),message])
+
+        return dbc.Container([table,html.Hr(),form])
     return html.H1("No tab selected")
 
 noteToSelf = dbc.InputGroup(
@@ -216,9 +331,6 @@ noteToSelf = dbc.InputGroup(
             className="mb-2",
             id = 'nts'
         )
-
-
-
 
 @app.callback(
     Output("nts_save","children"),
