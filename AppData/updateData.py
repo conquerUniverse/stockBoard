@@ -185,17 +185,17 @@ def addStructuredData(category):
 
 
     submitButton = dbc.Row([dbc.Button(f"{category.capitalize()} Stock", \
-        color="primary",n_clicks = 0,id="submit") ],justify="center")
+        color="primary",n_clicks = 0,id="submit") ],justify="end")
     
 
     password = dbc.Input(type="text", placeholder="enter Passwd")                 
     saveData = dbc.Button("Save Data", color="success",n_clicks = 0,id="saveData")
     
-    
-    if category == "invest" :
-        return dbc.Form( [investForm,password,submitButton,html.Hr(),saveData],inline=True )
-    else:
-        return  dbc.Form( [nameAndDate, numberAndPriceOfStock,totalCostAndExtraCharge,password,submitButton,html.Hr(),saveData] ,inline=True)
+    buySellForm = html.Div(dbc.FormGroup([nameAndDate, numberAndPriceOfStock,totalCostAndExtraCharge]),id="buySellForm")
+    investForm = html.Div(dbc.FormGroup([investForm,]),id="investForm")
+    return  dbc.Form( [buySellForm,investForm,
+                dbc.FormGroup([password,submitButton]),html.Hr(),saveData
+            ] ,inline=True)
 
 # save Data
 @app.callback(
@@ -211,19 +211,23 @@ def saveDataCallBack(_,category):
         sd.updateData(category=category)
         return category+" Values updated Successfully",True
 
-
-
 # update data BuySell
 @app.callback(
-    Output("message","children"),
+    [Output("message","children"),
+    Output("buySellForm","hidden"),
+    Output("investForm","hidden")
+    ],
+
     [
-    Input("submit","n_clicks"),
+    Input("submit","n_clicks"),#0
+
     Input("name","value"),
     Input("numberofstocks","value"),
     Input("price","value"),
     Input("date","value"),
     Input("totalcost","value"),
-    Input("extracharges","value"),
+    Input("extracharges","value"), #6
+
     Input("amountInvest","value"),
     Input("dateInvest","value"),
     Input("descInvest","value"),
@@ -232,39 +236,62 @@ def saveDataCallBack(_,category):
     Input("tabs","active_tab")
     ]
 )
-def tempUpdateData(*args):
-    if not args[0] :
-        # print("empty")
-        return "All Fine alt"
-    if all(args[:7]) or all(args[7:]):
-        if args[-1] == "buy":
-            data = {   "Name":args[1],
+def updateForm(*args):
+    defaultMessage = "This is a status Bar"
+    if args[-1] == "buy":
+        if ischanged(args[0]):
+            return (defaultMessage,False,True)
+        if all(args[:7]):
+            data = {"Name":args[1],
                     "NumberOfStocks":args[2],
                     "BuyingPrice":args[3],
                     "Date":args[4],
                     "TotalCost":args[5],
                     "ExtraCharges":args[6],
                     }
-        elif args[-1] == 'sell':
-            data = {   "Name":args[1],
+            sd.addData(args[-1],**data)
+            return ("Buy Data updates",False,True)
+        else:
+            return ("Please fill all entries",False,True)
+
+    elif args[-1] == "sell":
+        if ischanged(args[0]):
+            return (defaultMessage,False,True)
+        if all(args[:7]):
+            data = {"Name":args[1],
                     "NumberOfStocks":args[2],
                     "SellingPrice":args[3],
                     "Date":args[4],
                     "TotalCost":args[5],
                     "ExtraCharges":args[6],
                     }
+            sd.addData(args[-1],**data)
+            return ("Sell Data updates",False,True)
         else:
-            data = {  "Amount":args[7],
-                "Date":args[8],
-                "Description":args[9],
-                    }
-        print(data)
-        sd.addData(args[-1],**data)
-        return args[-1]+" Values updated Successfully"
+            return ("Please fill all entries",False,True)
+    
     else:
-        return "Fill complete data"
+        if ischanged(args[0]):
+            return (defaultMessage,True,False)
+        if all(args[7:-1]):
+            data = {  "Amount":args[7],
+                    "Date":args[8],
+                    "Description":args[9],
+                    }
+            sd.addData(args[-1],**data)
+            return ("Invest Data updates",True,False)
+        else:
+            return ("Please fill all entries",True,False)
 
-
+pastButton = 0
+def ischanged(x):
+    global pastButton
+    print(pastButton,x)
+    if x != pastButton:
+        pastButton = x
+        return False
+    else:
+        return True
 
 
 

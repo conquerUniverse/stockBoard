@@ -4,7 +4,7 @@ tools to analyse stock market and further research
 # How to run
 - Run the file 
 ```bash
-python app.py
+python index.py
 ```
 - go to the link http://127.0.0.1:8050/
 
