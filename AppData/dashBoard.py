@@ -6,7 +6,64 @@ import dash_table
 from dash.dependencies import Input, Output, State
 
 # from app.app_init import app
+from scripts.StockBoard import StockBoard
+from scripts.StockData import StockData
 
-layout = dbc.Jumbotron(
-    "Hi This is the front page.."
+username = "alvin369"
+
+def tableView(data):
+
+    var = dash_table.DataTable(
+    id='table',
+    columns=[{"name": i, "id": i} for i in data.columns],
+    data=data.to_dict('records'),
+
+    style_header = {
+        'backgroundColor': 'rgb(40, 20, 100)',
+        'color': 'white'
+    }
+    ,
+    style_data_conditional=[{
+        'if': {'column_id': ['Name','TotalCost','Amount']
+        },
+        'backgroundColor': 'rgb(10, 100, 30)',
+        'color': 'white'
+    }],
+
+    style_data = {
+        'backgroundColor': 'rgb(60, 50, 40)',
+        'color': 'white'
+    },
+
+    style_cell_conditional=[
+            {'if': {'column_id': 'title'},
+            'width': '100px'},
+            {'if': {'column_id': 'post'},
+            'width': '200px'
+            ,'height':'auto'},
+        ],
+
+    style_cell={
+            'overflow': 'hidden',
+            'textOverflow': 'ellipsis',
+            'maxWidth': '1px',
+            'textAlign':"center"
+        }
+
+    ,style_table={
+    'maxHeight': '300px'
+    ,'overflowY': 'auto'
+    },
+    )
+    return dbc.Container(var)
+
+sd = StockData(username=username) # default value 
+sd.load()
+stock = StockBoard(sd)
+layout = dbc.Jumbotron([
+    html.H1("Current Holdings", className="display-3"),
+    html.Hr(className="my-2"),
+    tableView(stock.getCurrHoldings())
+],
+fluid=True,   
     )
