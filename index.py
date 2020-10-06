@@ -47,8 +47,8 @@ dropdown = dbc.DropdownMenu(
 
 sd = None
 @app.callback(
-    [Output('login', 'label')],
-              [Input(user, 'n_clicks') for user in usernames])
+    Output('login', 'label'),
+    [Input(user, 'n_clicks') for user in usernames])
 def updateUserID(*args):
     ctx = dash.callback_context
     if not any(args):
@@ -127,7 +127,7 @@ footer = dbc.Navbar(
     dbc.Tooltip("Total Profit Till Now",target="profitTillNow",placement="top")],
     
 
-    justify="auto"
+    justify="center"
     
     ,style={"width":"100%"}
     ),
