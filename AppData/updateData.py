@@ -215,7 +215,11 @@ def saveDataCallBack(_,category):
 
 
 def putData(category,*args):
-    if not all(args[:6]) and not all(args[6:]):
+    print("displaying the data")
+    print(args)
+    print(args[:5])
+    print(args[6:])
+    if not all(args[:5]) and not all(args[6:]):
         return False
     dataInvest = { 
                     "Amount":args[6],
@@ -267,7 +271,8 @@ def putData(category,*args):
 def updateForm(*args):
     defaultMessage = "This is a status Bar"
     if ischanged(args[0]): # submit button is pressed
-        print(args[-1])
+        # print(args[-1])
+        print("Pressed save button")
         if putData(args[-1],*args[1:-1]):
             return (args[-1]+" Data is updated",formToggle(args[-1]),not formToggle(args[-1]))
         else:

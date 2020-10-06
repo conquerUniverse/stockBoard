@@ -86,6 +86,18 @@ class StockData:
         for i in orig:
             assert i in given, f"structure mismatch {i} not found"
 
+    def preprocessData(self,data,category="buy"):
+        data = data.fillna(0)
+        if category == "invest":
+            return data
+        data["BrokerageCost"] = 0
+        if category == 'buy':
+            data.BrokerageCost = abs(data.TotalCost - data.NumberOfStocks*data.BuyingPrice)
+        else:
+            data.BrokerageCost = abs(-data.TotalCost + data.NumberOfStocks*data.SellingPrice)
+        data.BrokerageCost += data.ExtraCharges
+        
+        return data.round(3)
 
     def addData(self,category,**kwargs):
         category = self.parseCategory(category)
@@ -94,6 +106,8 @@ class StockData:
 
         self.checkStructureMapping(structure,kwargs)
         new_df = pd.DataFrame(list(kwargs.values()),kwargs.keys()).T
+        new_df = self.preprocessData(new_df,category) # making right Format
+
         self.appendData_(category,new_df)
         
         
