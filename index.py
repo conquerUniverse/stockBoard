@@ -98,7 +98,7 @@ navbar = dbc.Navbar(
     ),
     color="dark",
     dark=True,
-    className="mb-4",
+    className="mb-3",
     sticky = "top",
     style={"height":"5%"}
 )
@@ -165,7 +165,7 @@ app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     navbar,
     dbc.Container(id='page-content',
-    style={"overflow":"auto","height":"100%","marginBottom":"2%","width":"95%"}
+    style={"overflow":"auto","height":"100%","marginBottom":"2%","width":"100%"}
     ),
     footer
 ],

@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 # import plotly.graph_objects as go
 from dateutil.parser import parse
-
+import pandasql as ps
 
 class StockBoard:
     
@@ -22,3 +22,23 @@ class StockBoard:
 
                 -sum(dfSell.NumberOfStocks * dfSell.SellingPrice))
         return round(val,2)
+    
+    def getCurrHoldings(self,):
+        dfBuy = self.data.Buy
+        dfSell = self.data.Sell
+
+        data = ps.sqldf("""
+
+        select a.Name,a.nStocks-coalesce(b.nStocks,0) as current from
+
+        (select Name,sum(NumberOfStocks) as nStocks,sum(BuyingPrice*NumberOfStocks) as Value
+        from dfBuy group by Name 
+        ) a
+        left outer join 
+        (select Name,sum(NumberOfStocks) as nStocks,sum(SellingPrice*NumberOfStocks) as Value
+        from dfSell group by Name) b
+
+        on a.Name = b.Name
+        where a.nStocks > coalesce(b.nStocks,0)
+        """)
+        return data
