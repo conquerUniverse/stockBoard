@@ -17,7 +17,7 @@ from scripts.StockData import StockData
 import os
 
 def isUser(name):
-    if name.lower() != "readme.md":
+    if name.lower() not in ("readme.md","passwords.cfg"):
         return True
     return False
 
@@ -28,13 +28,6 @@ usernames = [i for i in os.listdir("./profiles/") if isUser(i)]
 username = None
 sd = None
 
-# if username :
-#     sd = StockData(username='alvin369') # default value 
-#     # sc = StockBoard()
-#     sd.load() # load the data files
-#     investmentValue = html.Span(sum(sd.getData('invest').Amount))
-# else:
-#     investmentValue = html.Span("0")
 
 dropdown = dbc.DropdownMenu(
     children = [dbc.DropdownMenuItem(user,id=user) for user in usernames],        
@@ -176,10 +169,10 @@ style={"height":"100%"})
 def display_page(pathname):
     global username
     if not username:
-        return html.Div([html.H1('Please Select an ID and switch TABS..')])
+        return html.Div([html.H1('Please Select an userID and click the tab')])
 
     linkToPage = {
-            '/':dashBoard.layout,
+            '/':dashBoard.getLayout(username),
             '/updatedata':updateData.getLayout(username),
             '/analysis':analysis.layout
             }

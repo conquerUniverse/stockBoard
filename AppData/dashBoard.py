@@ -9,7 +9,7 @@ from dash.dependencies import Input, Output, State
 from scripts.StockBoard import StockBoard
 from scripts.StockData import StockData
 
-username = "alvin369"
+# username = "alvin369"
 
 def tableView(data):
 
@@ -57,13 +57,17 @@ def tableView(data):
     )
     return dbc.Container(var)
 
-sd = StockData(username=username) # default value 
-sd.load()
-stock = StockBoard(sd)
-layout = dbc.Jumbotron([
-    html.H1("Current Holdings", className="display-3"),
-    html.Hr(className="my-2"),
-    tableView(stock.getCurrHoldings())
-],
-fluid=True,   
-    )
+
+def getLayout(user):
+    sd = StockData(username=user) # default value 
+    sd.load()
+    stock = StockBoard(sd)
+    layout = dbc.Jumbotron([
+        html.H1("Current Holdings", className="display-3"),
+        html.Hr(className="my-2"),
+        tableView(stock.getCurrHoldings())
+    ],
+    fluid=True,   
+        )
+
+    return layout
