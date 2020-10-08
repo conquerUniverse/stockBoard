@@ -12,18 +12,17 @@ from scripts.StockData import StockData
 
 from app import app
 # general imports
-import os
+import os, hashlib,configparser
+
+# noteToSelf = open(f"./profiles/{username}/noteToSelf.txt",'w+').read()
 
 
-username = 'fahim' # lets fix this here for now
+# global Variables
+sd,username = None,'Fahim'
 
-sd = StockData(username=username) # default value 
-
-sd.load() # load the data files
-
-noteToSelf = open(f"./profiles/{username}/noteToSelf.txt",'w+').read()
-
-
+# loading password files
+config = configparser.ConfigParser()
+config.read('profiles/passwords.cfg')
 
 content = dbc.Container(
     [
@@ -96,7 +95,6 @@ def tableView(data):
 
 
 def addStructuredData(category):
-    # print(category)
     nameAndDate = dbc.FormGroup(
             [   dbc.Row(
                 [dbc.Label("Name", className="mr-2",width = 4),
@@ -190,7 +188,7 @@ def addStructuredData(category):
         color="primary",n_clicks = 0,id="submit") ],justify="end")
     
 
-    password = dbc.Input(type="text", placeholder="enter Passwd")                 
+    password = dbc.Input(type="text", placeholder="PLs. enter Passwd",id="password")                 
     saveData = dbc.Button("Save Data", color="success",n_clicks = 0,id="saveData")
     
     buySellForm = html.Div(dbc.FormGroup([nameAndDate, numberAndPriceOfStock,totalCostAndExtraCharge]),id="buySellForm")
@@ -215,10 +213,10 @@ def saveDataCallBack(_,category):
 
 
 def putData(category,*args):
-    print("displaying the data")
-    print(args)
-    print(args[:5])
-    print(args[6:])
+    # print("displaying the data")
+    # print(args)
+    # print(args[:5])
+    # print(args[6:])
     if not all(args[:5]) and not all(args[6:]):
         return False
     dataInvest = { 
@@ -241,7 +239,15 @@ def putData(category,*args):
     sd.addData(category,**d)
     return True
 
+def isPasswordMatching(pswd):
+    if not pswd:
+        return False
+    hashed = config['passwords'][username]
+    pswd = hashlib.md5(pswd.encode())
 
+    if pswd.hexdigest() == hashed:
+        return True
+    return False
 
 # update data BuySell
 @app.callback(
@@ -264,19 +270,21 @@ def putData(category,*args):
     Input("dateInvest","value"),
     Input("descInvest","value"), #9
 
-
+    Input("password",'value'),
     Input("tabs","active_tab") # access as args[-1]
     ]
 )
 def updateForm(*args):
     defaultMessage = "This is a status Bar"
-    if ischanged(args[0]): # submit button is pressed
-        # print(args[-1])
-        print("Pressed save button")
-        if putData(args[-1],*args[1:-1]):
-            return (args[-1]+" Data is updated",formToggle(args[-1]),not formToggle(args[-1]))
+    if ischanged(args[0]):
+        if isPasswordMatching(args[-2]): # submit button is pressed
+            # print("Pressed save button")
+            if putData(args[-1],*args[1:-2]):
+                return (args[-1]+" Data is updated",formToggle(args[-1]),not formToggle(args[-1]))
+            else:
+                return ("Please fill all entries",formToggle(args[-1]),not formToggle(args[-1]))
         else:
-            return ("Please fill all entries",formToggle(args[-1]),not formToggle(args[-1]))
+            return ("The password is not matching",formToggle(args[-1]),not formToggle(args[-1]))
     else:
         return (defaultMessage,formToggle(args[-1]),not formToggle(args[-1]))
 
@@ -292,7 +300,6 @@ def formToggle(x):
 pastButton = 0
 def ischanged(x):
     global pastButton
-    print(pastButton,x)
     if x != pastButton:
         pastButton = x
         return True
@@ -312,9 +319,7 @@ def render_tab_content(active_tab, data=1):
     stored graphs, and renders the tab content depending on what the value of
     'active_tab' is.
     """
-    # print(active_tab,data )
     if active_tab and data is not None:
-        # print("enter")
         data  = sd.getData(active_tab)
         table =  tableView(data)
         message = dbc.Alert("All Fine",id="message",color = "info")
@@ -326,30 +331,37 @@ def render_tab_content(active_tab, data=1):
         return dbc.Container([table,html.Hr(),form])
     return html.H1("No tab selected")
 
-noteToSelf = dbc.InputGroup(
+# noteToSelf = dbc.InputGroup(
     
-            [
-                dbc.Textarea(id = 'nts_text',spellCheck= True,value = noteToSelf,
-                title = 'write note to self',style={'width':'90%'}),
-                dbc.Button([html.H4("SAve files")],id="nts_save",n_clicks = 0,style={'width':'10%'} )
-            ],
-            className="mb-2",
-            id = 'nts'
-        )
+#             [
+#                 dbc.Textarea(id = 'nts_text',spellCheck= True,value = noteToSelf,
+#                 title = 'write note to self',style={'width':'90%'}),
+#                 dbc.Button([html.H4("SAve files")],id="nts_save",n_clicks = 0,style={'width':'10%'} )
+#             ],
+#             className="mb-2",
+#             id = 'nts'
+#         )
 
-@app.callback(
-    Output("nts_save","children"),
-    [Input("nts_save", "n_clicks"),Input("nts_text", "value")],
-)
-def nts_save_to_file(n_clicks,value):
-    if n_clicks :
-        with open(f"./profiles/{username}/noteToSelf.txt",'w') as w:
-            w.write(value)
-        print("file saved")
+# @app.callback(
+#     Output("nts_save","children"),
+#     [Input("nts_save", "n_clicks"),Input("nts_text", "value")],
+# )
+# def nts_save_to_file(n_clicks,value):
+#     if n_clicks :
+#         with open(f"./profiles/{username}/noteToSelf.txt",'w') as w:
+#             w.write(value)
+#         print("file saved")
     
 
 
+def getLayout(user):
+    global username,sd,content
+    username = user # lets fix this here for now
 
-layout = html.Div(
+    sd = StockData(username=username) # default value 
+
+    sd.load() # load the data files
+
+    return html.Div(
     children = [content]
     )
