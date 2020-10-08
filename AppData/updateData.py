@@ -14,20 +14,12 @@ from app import app
 # general imports
 import os
 
-
-username = 'fahim' # lets fix this here for now
-
-sd = StockData(username=username) # default value 
-
-sd.load() # load the data files
-
-noteToSelf = open(f"./profiles/{username}/noteToSelf.txt",'w+').read()
-
-
+pastButton = 0
+sd,username = None,None
 
 content = dbc.Container(
     [
-               
+            
         html.Hr(),
         
         dbc.Tabs(
@@ -158,7 +150,7 @@ def addStructuredData(category):
             style = {"width":"100%"}
             )
 
-   
+
     investForm = dbc.FormGroup(
             [   dbc.Row(
                 [dbc.Label("Amount", className="mr-2",width = 4),
@@ -243,6 +235,7 @@ def putData(category,*args):
 
 
 
+
 # update data BuySell
 @app.callback(
     [Output("message","children"),
@@ -289,7 +282,7 @@ def formToggle(x):
 
 
 
-pastButton = 0
+
 def ischanged(x):
     global pastButton
     print(pastButton,x)
@@ -302,18 +295,18 @@ def ischanged(x):
 
 
 # Tab select view
-@app.callback(
-    Output("tab-content", "children"),
-    [Input("tabs", "active_tab")],
-)
-def render_tab_content(active_tab, data=1):
+# @app.callback(
+#     Output("tab-content", "children"),
+#     Input("tabs", "active_tab"),
+# )
+def render_tab_content(active_tab):
     """
     This callback takes the 'active_tab' property as input, as well as the
     stored graphs, and renders the tab content depending on what the value of
     'active_tab' is.
     """
-    # print(active_tab,data )
-    if active_tab and data is not None:
+    print(active_tab)
+    if active_tab is not None:
         # print("enter")
         data  = sd.getData(active_tab)
         table =  tableView(data)
@@ -326,30 +319,33 @@ def render_tab_content(active_tab, data=1):
         return dbc.Container([table,html.Hr(),form])
     return html.H1("No tab selected")
 
-noteToSelf = dbc.InputGroup(
+# noteToSelf = dbc.InputGroup(
     
-            [
-                dbc.Textarea(id = 'nts_text',spellCheck= True,value = noteToSelf,
-                title = 'write note to self',style={'width':'90%'}),
-                dbc.Button([html.H4("SAve files")],id="nts_save",n_clicks = 0,style={'width':'10%'} )
-            ],
-            className="mb-2",
-            id = 'nts'
-        )
+#             [
+#                 dbc.Textarea(id = 'nts_text',spellCheck= True,value = noteToSelf,
+#                 title = 'write note to self',style={'width':'90%'}),
+#                 dbc.Button([html.H4("SAve files")],id="nts_save",n_clicks = 0,style={'width':'10%'} )
+#             ],
+#             className="mb-2",
+#             id = 'nts')
 
-@app.callback(
-    Output("nts_save","children"),
-    [Input("nts_save", "n_clicks"),Input("nts_text", "value")],
-)
-def nts_save_to_file(n_clicks,value):
-    if n_clicks :
-        with open(f"./profiles/{username}/noteToSelf.txt",'w') as w:
-            w.write(value)
-        print("file saved")
+# @app.callback(
+#     Output("nts_save","children"),
+#     [Input("nts_save", "n_clicks"),Input("nts_text", "value")],
+# )
+# def nts_save_to_file(n_clicks,value):
+#     if n_clicks :
+#         with open(f"./profiles/{username}/noteToSelf.txt",'w') as w:
+#             w.write(value)
+#         print("file saved")
     
 
 
+def getLayout(username='fahim'):
+    # username = 'fahim' # lets fix this here for now
+    sd = StockData(username=username) # default value 
+    sd.load() # load the data files
+    print("data loaded with ",username)
+    # noteToSelf = open(f"./profiles/{username}/noteToSelf.txt",'w+').read()
+    return html.Div([content])
 
-layout = html.Div(
-    children = [content]
-    )
