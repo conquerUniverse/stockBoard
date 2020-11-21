@@ -15,6 +15,19 @@ class StockBoard:
         df = self.data.getData(dfName)
         return df[df.Date <= parse(date)]
 
+    def getInvestedValue(self):
+        df = self.data.Invest
+        return df[df.Description == 'add'].Amount.sum()
+
+    def getTotalBrokerage(self):
+        sd = self.data
+        """ get total brokerage used including depository participant charges """
+        df_sell = sd.Sell.BrokerageCost.sum()
+        df_buy = sd.Buy.BrokerageCost.sum()
+        df = sd.Invest
+        df_invest = -df[df.Description != 'add'].Amount.sum()
+        return df_sell+df_buy+df_invest
+
     def getCurrBalance(self,):
         dfBuy, dfSell, dfInvest = self.data.Buy, self.data.Sell, self.data.Invest
         val =  sum(dfInvest.Amount)-(   sum(dfBuy.NumberOfStocks*dfBuy.BuyingPrice)+ \
