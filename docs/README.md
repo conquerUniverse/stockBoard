@@ -30,5 +30,7 @@
     - updateData(categor,loc)
         - update the data in the disk
 
+    - getTotalBrokerage(sd)
+        - get total brokerage used including depository participant charges 
 
 StockBoard

@@ -111,15 +111,18 @@ def toggle_navbar_collapse(n, is_open):
 
 
 footer = dbc.Navbar(
-    dbc.Row([dbc.Button("0",id="investmentVal",color="info"), 
+    dbc.Row([dbc.Button("0",id="investmentVal",color="primary"), 
     dbc.Button("0",id="accountBalance",color="primary"), 
     dbc.Button("0",id="profitTillNow",color="success"), 
+    dbc.Button("0",id="totalBrokerage",color="danger"), 
+    
     
 
 
     dbc.Tooltip("Total Investment",target="investmentVal",placement="top"),
     dbc.Tooltip("Demat Account Balance",target="accountBalance",placement="top"),
-    dbc.Tooltip("Total Profit Till Now",target="profitTillNow",placement="top")],
+    dbc.Tooltip("Total Profit Till Now",target="profitTillNow",placement="top"),
+    dbc.Tooltip("Total Brokerage ",target="totalBrokerage",placement="top")],
     
 
     justify="center"
@@ -138,7 +141,19 @@ footer = dbc.Navbar(
 def updateInvestmentVal(n_clicks):
     if n_clicks:
         global sd
-        val = round(sum(sd.getData('invest').Amount),3)
+        sb = StockBoard(sd)
+        val = round(sb.getInvestedValue(),3)
+        return val
+    return 0
+
+@app.callback(
+    Output("totalBrokerage", "children"),Input("totalBrokerage", "n_clicks")
+)
+def updateTotalBrokerage(n_clicks):
+    if n_clicks:
+        global sd
+        sb = StockBoard(sd)
+        val = round(sb.getTotalBrokerage(),3)
         return val
     return 0
 
