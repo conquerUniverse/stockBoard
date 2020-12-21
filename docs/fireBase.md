@@ -1,27 +1,27 @@
 # FireBase 
---
+---
 
 ## DataBase Structure
 
 DataBaseName = "StockData"
-
--- <Stock Short Name>
-    |-- <Complete Name>
-    |-- <Category>
+```
+ <Stock Short Name>
+    |-- Name = <Complete Name>
+    |-- Category = <Category>
     |--Prices
         |--Days
-        |   |--<Date>
+        |   |--date = <Date> 
         |       |--High = <HighValue>
         |       |--Low = <LowValue>
         |       |--Open = <OpenValue>
         |       |--Close = <CloseValue>
         |       |--PE = <PE Ratio Value>
         |--Weekly
-        |   |--<Date>
+        |   |--date = <Date>
         |       |--High = <HighValue>
         |       |--Low = <LowValue>
         |       |--Open = <OpenValue>
         |       |--Close = <CloseValue>
         |       |--PE = <PE Ratio Value>
 
---
+```
