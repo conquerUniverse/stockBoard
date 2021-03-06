@@ -18,3 +18,4 @@ coverage.xml
 
 .ipynb_checkpoints
 scripts/__pycache__/
+scripts/__pycache__/StockBoard.cpython-37.pyc
