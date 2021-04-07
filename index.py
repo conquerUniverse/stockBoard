@@ -7,7 +7,7 @@ import dash_table
 from dash.dependencies import Input, Output, State
 
 from app import app
-from AppData import updateData,dashBoard,analysis
+from AppData import updateData,dashBoard,analysis,charts
 
 # stockBorad lib imports
 from scripts.StockBoard import StockBoard
@@ -76,6 +76,7 @@ navbar = dbc.Navbar(
                 dbc.Row(       # right align dropdown menu with ml-auto className
             [
             dbc.NavLink("DashBoard", href="/"),
+            dbc.NavLink("Charts", href="/charts"),
             dbc.NavLink("UpdateData", href="/updatedata"),
             dbc.NavLink("Analysis", href="/analysis"),
             dropdown
@@ -189,7 +190,8 @@ def display_page(pathname):
     linkToPage = {
             '/':dashBoard.getLayout(username),
             '/updatedata':updateData.getLayout(username),
-            '/analysis':analysis.layout
+            '/analysis':analysis.layout,
+            '/charts':charts.layout
             }
     try: 
         print("userename is ",username)

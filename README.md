@@ -17,10 +17,10 @@ python index.py
 - https://dash-gallery.plotly.host/Portal/
 
 # Tasks
-- [ ] Learn Dash
-- [ ] create Jupyter Dashboard
-- [ ] Link the API
+- [x] Learn Dash
+- [ ] Link the API (still stuck)
 - [ ] Test the Funcitonality
+
 
 
 # learning
@@ -29,6 +29,9 @@ python index.py
 - def j(**kwargs):
 - d ={'dsf':'fs'}
 - j(**d)
+
+## pandas
+- df = df.query("type == 'conventional' and region == 'Albany'")
 
 - datetime.now().strftime("%Y%m%d")
 
