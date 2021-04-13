@@ -1,5 +1,5 @@
 # Dash IMP Links
-
+https://realpython.com/python-dash/
 
 - Use bootstrap themes
 dbc.themes.SUPERHERO
@@ -21,3 +21,4 @@ Table styling conditions
 - use a common Dash().app
 - on subpages don't use app.layout
 - use the pages as a python modules
+

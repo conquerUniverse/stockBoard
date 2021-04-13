@@ -9,6 +9,7 @@ from dash.dependencies import Input, Output
 # stockBorad lib imports
 from scripts.StockBoard import StockBoard
 from scripts.StockData import StockData
+from scripts.StockInfo import StockInfo
 
 from app import app
 # general imports
@@ -22,7 +23,12 @@ sd,username = None,'Fahim'
 
 # loading password files
 config = configparser.ConfigParser()
+si = StockInfo()
 config.read('profiles/passwords.cfg')
+
+# global value use to set up dynamic content
+currentTab = None
+stockNames = si.getLabelValueMap()
 
 content = dbc.Container(
     [
@@ -93,13 +99,23 @@ def tableView(data):
     return dbc.Container(var)
 
 
-
 def addStructuredData(category):
     nameAndDate = dbc.FormGroup(
             [   dbc.Row(
-                [dbc.Label("Name", className="mr-2",width = 4),
-                dbc.Input( placeholder="Enter Name",id="name")],                
-            style = {"width":"50%"} ),
+                [
+            dbc.Label("Name", className="mr-2",width = 4),
+            dcc.Dropdown(id = "name",options=stockNames,
+            value = 'BPCL',style=
+                                    { 
+                                        'width': '200px',
+                                      'color': 'black',
+                                      'background-color': 'white',
+                                    } 
+                                    )],               
+            style = {"width":"50%"} 
+            
+            ),
+
                 dbc.Row(
                 [dbc.Label("Date", className="mr-2",width = 4),
                 dbc.Input( type="date",id="date")] ,
@@ -276,6 +292,7 @@ def isPasswordMatching(pswd):
 )
 def updateForm(*args):
     defaultMessage = "This is a status Bar"
+    print("changed",args[-1])
     if ischanged(args[0]):
         if isPasswordMatching(args[-2]): # submit button is pressed
             # print("Pressed save button")

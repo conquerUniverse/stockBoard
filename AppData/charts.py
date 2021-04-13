@@ -9,20 +9,7 @@ import plotly.graph_objs as go
 import pandas as pd
 import os
 
-g = dcc.Graph(id='stockChart',
-                            #   figure={
-                            #       'data':[go.Line(
-                            #           x=df['Date'],
-                            #           y=df['Close'],
-                            #           mode='lines'
-                            #       )],
-                            #       'layout':go.Layout(
-                            #           title='BPCL Chart',
-                            #           xaxis={'title':'Time line'},
-                            #           yaxis={'title':'Value'},
-                            #           hovermode='closest'
-                            #        )}
-                    )
+g = dcc.Graph(id='stockChart')
 
 stockDataAvailable = [{'label':i.split('.')[0],'value':i.split('.')[0]} for i in 
 os.listdir("./data/stockData/") if i.split('.')[1] == 'csv']

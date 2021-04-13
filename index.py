@@ -7,7 +7,7 @@ import dash_table
 from dash.dependencies import Input, Output, State
 
 from app import app
-from AppData import updateData,dashBoard,analysis,charts
+from AppData import updateData,dashBoard,analysis,charts,dev
 
 # stockBorad lib imports
 from scripts.StockBoard import StockBoard
@@ -25,8 +25,8 @@ usernames = [i for i in os.listdir("./profiles/") if isUser(i)]
 
 
 
-username = None
-sd = None
+username = 'alvin369'
+sd = None # stock data dataframe
 
 
 dropdown = dbc.DropdownMenu(
@@ -79,6 +79,7 @@ navbar = dbc.Navbar(
             dbc.NavLink("Charts", href="/charts"),
             dbc.NavLink("UpdateData", href="/updatedata"),
             dbc.NavLink("Analysis", href="/analysis"),
+            dbc.NavLink("Development", href="/dev"),
             dropdown
             ], className="ml-auto", 
             no_gutters=True,
@@ -191,10 +192,11 @@ def display_page(pathname):
             '/':dashBoard.getLayout(username),
             '/updatedata':updateData.getLayout(username),
             '/analysis':analysis.layout,
-            '/charts':charts.layout
+            '/charts':charts.layout,
+            '/dev':dev.layout
             }
     try: 
-        print("userename is ",username)
+        # print("userename is ",username)
         return linkToPage[pathname]
     except:
         return html.Div([html.H1('Page Is Broken.. :( {}'.format(pathname)
