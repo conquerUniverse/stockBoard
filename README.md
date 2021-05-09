@@ -4,7 +4,12 @@ tools to analyse stock market and further research
 # How to run
 - Run the file 
 ```bash
+
+conda create -n dash python
+conda activate dash
 python index.py
+pip install -r requirements.txt 
+
 ```
 - go to the link http://127.0.0.1:8050/
 

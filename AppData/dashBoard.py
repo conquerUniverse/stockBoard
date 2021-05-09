@@ -62,12 +62,11 @@ def getLayout(user):
     sd = StockData(username=user) # default value 
     sd.load()
     stock = StockBoard(sd)
-    layout = dbc.Jumbotron([
-        html.H1("Current Holdings", className="display-3"),
-        html.Hr(className="my-2"),
-        tableView(stock.getCurrHoldings())
+    layout = dbc.Card([
+        dbc.CardHeader("Current Holdings"),
+        dbc.CardBody(tableView(stock.getCurrHoldings()))
     ],
-    fluid=True,   
+    outline = True
         )
 
     return layout

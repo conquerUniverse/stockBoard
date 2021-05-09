@@ -12,12 +12,12 @@ import os
 g = dcc.Graph(id='stockChart')
 
 stockDataAvailable = [{'label':i.split('.')[0],'value':i.split('.')[0]} for i in 
-os.listdir("./data/stockData/") if i.split('.')[1] == 'csv']
+os.listdir("./data/stockData/daily") if i.split('.')[1] == 'csv']
 # print(stockDataAvailable)
 
 dp = dcc.Dropdown(id='dropdown', options=stockDataAvailable,
-            value = 'BPCL', style=
-                                    { 'width': '500px',
+            value = 'RELIANCE', style=
+                                    { 
                                       'color': 'black',
                                       'background-color': 'white',
                                     } )
@@ -25,10 +25,10 @@ dp = dcc.Dropdown(id='dropdown', options=stockDataAvailable,
 
 
 def create_figure(name):
-    df = pd.read_csv(f"./data/stockData/{name}.csv")
+    df = pd.read_csv(f"./data/stockData/daily/{name}.csv")
 
-    data = go.Scatter(          x=df['Date'],
-                                      y=df['Close'],
+    data = go.Scatter(          x=df['timestamp'],
+                                      y=df['close'],
                                       mode='lines'
                                   )
     layout = go.Layout(         title=f'{name} Chart',
@@ -46,4 +46,4 @@ def update_figure(selected_value):
     fig = create_figure(selected_value)
     return fig
 
-layout = dbc.Jumbotron([dp,g])
+layout = dbc.Card([dbc.CardHeader(dp),dbc.CardBody(g)], outline=True)
