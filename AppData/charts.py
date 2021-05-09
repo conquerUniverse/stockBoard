@@ -24,26 +24,39 @@ dp = dcc.Dropdown(id='dropdown', options=stockDataAvailable,
 
 
 
-def create_figure(name):
-    df = pd.read_csv(f"./data/stockData/daily/{name}.csv")
-
+def create_figure(name,df):
     data = go.Scatter(          x=df['timestamp'],
                                       y=df['close'],
                                       mode='lines'
                                   )
     layout = go.Layout(         title=f'{name} Chart',
                                       xaxis={'title':'Time-line'},
-                                      yaxis={'title':'Value'},
+                                      yaxis={'title':'Value'},margin={'l':2,'r':5,'b':5}
                                     #   hovermode='closest'
                                    )
     fig = go.Figure(data=data, layout=layout)
     return fig
 
 @app.callback(Output('stockChart', 'figure'), 
-              [Input('dropdown', 'value')])
-def update_figure(selected_value):
+              [Input('dropdown', 'value'),
+              Input('start_date', 'value'),
+              Input('end_date', 'value')])
+def update_figure(selected_value,start_date,end_date):
+    print(start_date,end_date)
+    df = pd.read_csv(f"./data/stockData/daily/{selected_value}.csv")
+    if start_date is not None:
+      df = df[df.timestamp >= start_date]
+    if end_date is not None:
+      df = df[df.timestamp <= end_date]
+    fig = create_figure(selected_value,df)
 
-    fig = create_figure(selected_value)
     return fig
 
-layout = dbc.Card([dbc.CardHeader(dp),dbc.CardBody(g)], outline=True)
+table_header = dbc.Row([html.Div(dp,className="col-4"),
+  dbc.Label("Start date",className="col"),
+  dbc.Input(type="date",id="start_date",className="col"),
+  dbc.Label("End date",className="col w-1"),
+  dbc.Input(type="date",id="end_date",className="col")
+  ])
+
+layout = dbc.Card([dbc.CardHeader(table_header),dbc.CardBody(g)], outline=True)

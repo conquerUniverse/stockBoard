@@ -172,11 +172,12 @@ app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     navbar,
     dbc.Container(id='page-content',
-    style={"overflow":"auto","height":"100%","marginBottom":"2%","width":"100%"}
+    style={"overflow":"auto","height":"100%","marginBottom":"1%","width":"200%"}
+    ,className="px-0"
     ),
     footer
 ],
-style={"height":"100%"})
+style={"height":"100%","width":"100%"})
 
 
 
@@ -203,5 +204,5 @@ def display_page(pathname):
 
 
 
-app.run_server()
+app.run_server(debug=True)
 # server = app.server

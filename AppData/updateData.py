@@ -5,6 +5,8 @@ import dash_html_components as html
 import dash_core_components as dcc
 import dash_table
 from dash.dependencies import Input, Output
+from dash_extensions import Download
+from dash_extensions.snippets import send_data_frame
 
 # stockBorad lib imports
 from scripts.StockBoard import StockBoard
@@ -25,19 +27,24 @@ config = configparser.ConfigParser()
 config.read('profiles/passwords.cfg')
 
 content = dbc.Card(
-    [dbc.CardHeader(      
+    [dbc.CardHeader(   
+        [   
         dbc.Tabs(
             [
                 dbc.Tab(label="buy", tab_id="buy"),
                 dbc.Tab(label="sell", tab_id="sell"),
                 dbc.Tab(label="invest", tab_id="invest"),
-            ],
+                 ],
             id="tabs",
             active_tab="buy",
-        ) ),
+            className="col"
+        ),
+        dbc.Button("Download Data ",id="download_data",
+        className="float-md-right btn col-2 btn-md ",outline=True)
+     ],className="row" ),
         # dcc.ConfirmDialog( id='messageSave' ),
         dbc.CardBody(dbc.Container(id="tab-content", className="p-4")),
-       
+       Download(id="download"),
     ]
     , outline=True
 )
@@ -350,7 +357,13 @@ def render_tab_content(active_tab, data=1):
 #         with open(f"./profiles/{username}/noteToSelf.txt",'w') as w:
 #             w.write(value)
 #         print("file saved")
-    
+
+@app.callback(
+Output("download", "data"),
+Input("download_data", "n_clicks"))
+def download_data(n_clicks):
+    if n_clicks is not None:
+        return send_data_frame(sd.getData().to_csv, filename=sd.active_data+".csv")
 
 
 def getLayout(user):

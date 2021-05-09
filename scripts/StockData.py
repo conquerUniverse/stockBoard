@@ -12,6 +12,7 @@ class StockData:
         self.location = os.path.join(location,username)
         assert os.path.isdir(self.location) == True, self.location+" path not found \n curr path"+str(os.curdir)
         self.isDataLoaded = False
+        self.active_data = "buy"
         
     
     def load(self,):
@@ -22,12 +23,12 @@ class StockData:
         self.isDataLoaded = True
         # print("Files Successfully loaded")
     
-    def getData(self,category):
+    def getData(self,category=None):
         assert self.isDataLoaded,"Data is not loaded"
-
-        category = self.parseCategory(category)
+        if category is not None:
+            self.active_data = self.parseCategory(category)
         dic = {'buy':self.Buy, 'sell':self.Sell, 'invest':self.Invest}
-        return dic[category].sort_values(by='Date',ascending=False)
+        return dic[self.active_data].sort_values(by='Date',ascending=False)
 
     def appendData_(self,category,new_df):
         assert self.isDataLoaded,"Data is not loaded"
