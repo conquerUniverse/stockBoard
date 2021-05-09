@@ -35,8 +35,7 @@ dropdown = dbc.DropdownMenu(
     in_navbar = True,
     id = 'login',
     label = "Login",
-    color="Info"
-    
+    color="Info"    
 )
 
 @app.callback(

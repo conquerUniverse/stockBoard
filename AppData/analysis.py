@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 
 
-layout = dbc.Jumbotron(
+layout = dbc.Container(
     [html.H1("Analysis part is Under Development.."),
     html.Div([html.H3("Curial points for trading",style={"color":'orange'}),
         html.Li("Start Slow and Steady.. gain Experience",style={"color":'orange'}),

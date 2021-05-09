@@ -24,11 +24,8 @@ sd,username = None,'Fahim'
 config = configparser.ConfigParser()
 config.read('profiles/passwords.cfg')
 
-content = dbc.Container(
-    [
-               
-        html.Hr(),
-        
+content = dbc.Card(
+    [dbc.CardHeader(      
         dbc.Tabs(
             [
                 dbc.Tab(label="buy", tab_id="buy"),
@@ -37,11 +34,12 @@ content = dbc.Container(
             ],
             id="tabs",
             active_tab="buy",
-        ),
-        dcc.ConfirmDialog(
-        id='messageSave' ),
-        dbc.Container(id="tab-content", className="p-4"),
+        ) ),
+        # dcc.ConfirmDialog( id='messageSave' ),
+        dbc.CardBody(dbc.Container(id="tab-content", className="p-4")),
+       
     ]
+    , outline=True
 )
 
 
@@ -325,8 +323,9 @@ def render_tab_content(active_tab, data=1):
         message = dbc.Alert("All Fine",id="message",color = "info")
 
 
-        form = dbc.Jumbotron([html.H2("Update "+str(active_tab)+" Data",className="display-5"),
-                                    html.Br(),addStructuredData(active_tab),message])
+        form = dbc.Card([dbc.CardHeader("Update "+str(active_tab)+" Data",className="display-5"),
+                    dbc.CardBody(addStructuredData(active_tab)),dbc.CardFooter(message)]
+                    ,outline=True)
 
         return dbc.Container([table,html.Hr(),form])
     return html.H1("No tab selected")
