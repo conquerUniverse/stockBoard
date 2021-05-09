@@ -172,8 +172,7 @@ app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     navbar,
     dbc.Container(id='page-content',
-    style={"overflow":"auto","height":"100%","marginBottom":"1%","width":"200%"}
-    ,className="px-0"
+    style={"overflow":"auto","height":"100%","marginBottom":"1%"}
     ),
     footer
 ],
