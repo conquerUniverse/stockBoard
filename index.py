@@ -203,5 +203,5 @@ def display_page(pathname):
 
 
 
-app.run_server(debug=True)
-# server = app.server
+# app.run_server(debug=True)
+server = app.server
