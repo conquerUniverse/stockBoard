@@ -33,13 +33,15 @@ popUp =  dbc.Modal(
 
 # dynamically generate the strategies code
 pageBody = dbc.CardBody([dbc.Row([
-    dbc.Col(dbc.Label(i)),
-    dbc.Col(dbc.Button("Score",id=i,className="btn float-md-right ")),
-    dbc.Col(dbc.Button("Show Code", id=i+"_code",className="ml-0 btn  float-md-right"),)
+    dbc.Col(dbc.Label(i),className=" col-md-6 col-lg-8 col-sm-6 col-xs-12 p-0 m-0"),
+    dbc.Col(dbc.Button("Score",id=i,className="btn btn-block "),className="h6 col-md-3 col-lg-2 col-sm-3 col-xs-12 p-0 m-0  m-xs-0"),
+    dbc.Col(dbc.Button("Show Code", id=i+"_code",className="btn btn-block"),className="h6 col-md-3 col-lg-2 col-sm-3 col-xs-12 p-0 m-0  m-xs-0")
 ]
-    ,justify="around",className="border mb-1 "+np.random.choice(border_color)) for i in scripts_name])
+,no_gutters=True,justify="around",className="border mb-1 row-fluid "+np.random.choice(border_color)) for i in scripts_name])
 
-layout = dbc.Card([pageHeader,pageBody,popUp],outline=True)
+layout = dbc.Container(
+    dbc.Card([pageHeader,pageBody,popUp],outline=True,className="w-100 p-0 m-0")
+    ,fluid=True,className="w-100 p-0")
 
 
     
@@ -60,10 +62,3 @@ def toggle_modal(is_open,*args):
     code = "```python\n"+open(os.path.join(path,name+'.py')).read()+"\n```"
 
     return name,code,True
-
-
-    # code = open(os.path.join(path,)
-
-    # if n1 or n2:
-    #     return not is_open
-    # return is_open
