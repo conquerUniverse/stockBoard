@@ -5,7 +5,8 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import dash_core_components as dcc
-import plotly.graph_objs as go
+import plotly.express as px
+# import plotly.graph_ as go
 import pandas as pd
 import os
 
@@ -21,38 +22,53 @@ dp = dcc.Dropdown(id='dropdown', options=stockDataAvailable,
                                       'color': 'black',
                                       'background-color': 'white',
                                     } )
+sma_list = [5,10,20,46,50,100]
+sma = dcc.Dropdown(multi=True,id="smaDropdown",
+  options = [{'label':i,'value':i} for i in sma_list])
 
-
-
-def create_figure(name,df):
-    data = go.Scatter(          x=df['timestamp'],
-                                      y=df['close'],
-                                      mode='lines'
+def create_figure(name,df,xCol,yCol):
+    fig = px.line(  df,          x=xCol, y=yCol,
+                                    title=f'{name} Chart',
+      #                                xaxis={'title':'Time-line'},
+      # yaxis={'title':'Value'},margin={'l':2,'r':5,'b':5}
                                   )
-    layout = go.Layout(         title=f'{name} Chart',
-                                      xaxis={'title':'Time-line'},
-                                      yaxis={'title':'Value'},margin={'l':2,'r':5,'b':5}
-                                    #   hovermode='closest'
-                                   )
-    fig = go.Figure(data=data, layout=layout)
+    # layout = px.Layout(         title=f'{name} Chart',
+    #                                   xaxis={'title':'Time-line'},
+    #                                   yaxis={'title':'Value'},margin={'l':2,'r':5,'b':5}
+    #                                 #   hovermode='closest'
+    #                                )
+    # fig = go.Figure(data=data, layout=layout)
     return fig
+
+# df =None
+# df_name = None
 
 @app.callback(Output('stockChart', 'figure'), 
               [Input('dropdown', 'value'),
+              Input('smaDropdown', 'value'),
               Input('start_date', 'value'),
               Input('end_date', 'value')])
-def update_figure(selected_value,start_date,end_date):
-    print(start_date,end_date)
+def update_figure(selected_value,sma_value,start_date,end_date):
+    print(sma_value)
+    # global df, df_name
+    # if df_name != selected_value:
     df = pd.read_csv(f"./data/stockData/daily/{selected_value}.csv")
+    # df_name = selected_value
     if start_date is not None:
       df = df[df.timestamp >= start_date]
     if end_date is not None:
       df = df[df.timestamp <= end_date]
-    fig = create_figure(selected_value,df)
+    yCol = ['close']
+    if sma_value is not None:
+      for smaV in sma_value:
+        df["sma-"+str(smaV)] = df["close"].rolling(window=smaV).mean()
+        yCol.append('sma-'+str(smaV))
+    fig = create_figure(selected_value,df,'timestamp',yCol)
 
     return fig
 
-table_header = dbc.Row([html.Div(dp,className="col-4"),
+table_header = dbc.Row([html.Div(dp,className="col-3"),
+  html.Div(sma,className="col"),
   dbc.Label("Start date",className="col"),
   dbc.Input(type="date",id="start_date",className="col"),
   dbc.Label("End date",className="col w-1"),
