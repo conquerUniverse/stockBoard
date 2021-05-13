@@ -16,6 +16,7 @@ pageHeader = dbc.CardHeader("Trading Strategies")
 
 path = "tradingStrategies/scripts/"
 path_results = "tradingStrategies/results/"
+
 # get scripts name
 scripts_name = [i[:-3] for i in os.listdir(path) if i[-3:] == '.py' and i != '__init__.py']
 # scripts_name = [i.split('.')[0] for i in os.listdir(path)]
@@ -26,8 +27,10 @@ border_color = ["border-secondary","border-success","border-dark","border-warnin
 popUp =  dbc.Modal(
             [
                 dbc.ModalHeader("Header",id="modalHeader"),
-                dbc.ModalBody(dcc.Markdown(id="markdownCode",highlight_config={'theme':'dark'},
-                ) ,id="modalBody", className="overflow-auto"),
+                dbc.ModalBody(
+                    dcc.Markdown(id="markdownCode",highlight_config={'theme':'dark'},
+                ) 
+                ,id="modalBody", className="overflow-auto"),
                 dbc.ModalFooter(
                     dbc.Button("Close", id="close", className="ml-auto")
                 ),
@@ -70,7 +73,6 @@ layout = dbc.Container([
     State("modal", "is_open")
 )
 def toggle_modal(is_open,*args):
-    # print("button clicked")
     changed = ctx.triggered[0]['prop_id'].split('.')[0]
     if 'close' in changed or changed == '':
         return '','',False
@@ -113,10 +115,4 @@ def toggle_modal_result(is_open,*args):
     style_header={'backgroundColor':'black'},
     style_cell ={'backgroundColor':'black'}, )
     )
-    # performance = dbc.Container([
-    #     dbc.Row([dbc.Col(df.iloc[i]['name']),
-    #             dbc.Col(df.iloc[i]['profitPercent'])])
-    #  for i in range(len(df))
-    #  ],style={'height':'70vh','overflow':'auto'})
-    # performance = html.Div("Hi")
     return changed+" - "+str(len(df)),performance,True

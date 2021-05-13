@@ -10,11 +10,24 @@ import plotly.express as px
 import pandas as pd
 import os
 
+scriptPath = "tradingStrategies/scripts"
+
+def getScriptsName():
+  names = [i[:-3] for i in os.listdir(scriptPath) if i[-3:] == '.py' and i != '__init__.py']
+  return names
+
+
 g = dcc.Graph(id='stockChart')
 
 stockDataAvailable = [{'label':i.split('.')[0],'value':i.split('.')[0]} for i in 
 os.listdir("./data/stockData/daily") if i.split('.')[1] == 'csv']
+
+strategyAvailable = [{'label':i.split('.')[0],'value':i.split('.')[0]} for i in getScriptsName()]
 # print(stockDataAvailable)
+strategyDropdown = dcc.Dropdown(id='strategy_id', options=strategyAvailable,
+            value = None, style={ 'color': 'black',
+                                      'background-color': 'white',
+                                    } )
 
 dp = dcc.Dropdown(id='dropdown', options=stockDataAvailable,
             value = 'RELIANCE', style=
@@ -29,19 +42,9 @@ sma = dcc.Dropdown(multi=True,id="smaDropdown",
 def create_figure(name,df,xCol,yCol):
     fig = px.line(  df,          x=xCol, y=yCol,
                                     title=f'{name} Chart',
-      #                                xaxis={'title':'Time-line'},
-      # yaxis={'title':'Value'},margin={'l':2,'r':5,'b':5}
                                   )
-    # layout = px.Layout(         title=f'{name} Chart',
-    #                                   xaxis={'title':'Time-line'},
-    #                                   yaxis={'title':'Value'},margin={'l':2,'r':5,'b':5}
-    #                                 #   hovermode='closest'
-    #                                )
-    # fig = go.Figure(data=data, layout=layout)
     return fig
 
-# df =None
-# df_name = None
 
 @app.callback(Output('stockChart', 'figure'), 
               [Input('dropdown', 'value'),
@@ -50,10 +53,7 @@ def create_figure(name,df,xCol,yCol):
               Input('end_date', 'value')])
 def update_figure(selected_value,sma_value,start_date,end_date):
     print(sma_value)
-    # global df, df_name
-    # if df_name != selected_value:
     df = pd.read_csv(f"./data/stockData/daily/{selected_value}.csv")
-    # df_name = selected_value
     if start_date is not None:
       df = df[df.timestamp >= start_date]
     if end_date is not None:
@@ -67,12 +67,18 @@ def update_figure(selected_value,sma_value,start_date,end_date):
 
     return fig
 
-table_header = dbc.Row([html.Div(dp,className="col-3"),
+table_header = dbc.Row(
+  [dbc.Row([html.Div(dp,className="col-3"),
   html.Div(sma,className="col"),
   dbc.Label("Start date",className="col"),
   dbc.Input(type="date",id="start_date",className="col"),
-  dbc.Label("End date",className="col w-1"),
+  dbc.Label("End date",className="col "),
   dbc.Input(type="date",id="end_date",className="col")
-  ])
+  ]),
+  dbc.Row([strategyDropdown,
+  dbc.Button("trade",id="strategy_trade", className="btn-primary btn-sm")])
+  ]
+
+)
 
 layout = dbc.Card([dbc.CardHeader(table_header),dbc.CardBody(g)], outline=True)
