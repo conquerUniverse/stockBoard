@@ -87,12 +87,14 @@ navbar = dbc.Navbar(
                 navbar=True,
             ),
         ]
+        ,className="border border-info p-1 "
     ),
     color="dark",
     dark=True,
     className="mb-3",
     sticky = "top",
-    style={"height":"5%"}
+    style={"height":"5%"},
+    
 )
 
 
