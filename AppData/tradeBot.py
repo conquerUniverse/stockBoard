@@ -78,9 +78,10 @@ layout = html.Div([ html.Div([codeEditor,options],className="row h-60"),
 
 def create_figure(name,df,xCol,yCol,**kwargs):
     fig = px.line(  df,x=xCol, y=yCol,
-                                    title=f'{name} Chart',**kwargs
+                                    # title=f'{name} Chart',
+                                    **kwargs
                                   )
-    # fig.layout=go.Layout()
+    fig.update_layout(margin=dict(l=0,r=0,t=0,b=0),paper_bgcolor="LightSteelBlue")
     return fig
 
 #----- callbacks ---------

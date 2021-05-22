@@ -176,9 +176,9 @@ app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     navbar,
     dbc.Container(id='page-content',fluid=True,
-    style={"overflow":"auto","height":"100%","marginBottom":"1%"}
+    style={"overflow":"auto","height":"90%","marginBottom":"1%"}
     ),
-    footer
+    # footer
 ],
 style={"height":"100%","width":"100%"})
 
@@ -208,5 +208,5 @@ def display_page(pathname):
 
 
 
-app.run_server(debug=True)
+app.run_server(debug=True,threaded=True)
 # server = app.server
