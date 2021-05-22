@@ -4,9 +4,10 @@ import pandas as pd
 # using complete dataframe
 def run(df):
     res = []
+    print("good")
     current_stock = 0
     lim = 10
-    np.random.seed(100)
+    np.random.seed(150)
 
     for i in range(len(df)):
         d = {}

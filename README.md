@@ -13,6 +13,9 @@ pip install -r requirements.txt
 ```
 - go to the link http://127.0.0.1:8050/
 
+# how to
+- how to read a funciton form a string and treat it as a module.
+
 # Imp Links
 - https://dash-bootstrap-components.opensource.faculty.ai/docs/components/navbar/
 - choosealicense.com

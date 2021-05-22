@@ -19,9 +19,9 @@ from tradingStrategies.backtest import BackTest
 # val = "apply filters"*100
 
 template = open("assets/templateCode.py",'r').read()
-fileName = html.Div("fileName.py",style={'height':'5%','marginBottom':'1%'})
+fileName = html.Div("fileName.py",id="filename",contentEditable="true",style={'height':'5%','marginBottom':'1%'})
 # print(template)
-ide = html.Textarea(template,contentEditable="true",spellCheck="true",
+ide = dbc.Textarea(value=template,contentEditable="true",spellCheck="true",id="code",
           style={'height':'90%',"width":'100%','fontFamliy':"monospace",'color':'crimson'},
               className="border border-success")
 
@@ -48,7 +48,9 @@ filters = html.Div([dbc.Row(
     dbc.Label("End date",className="col-3 "),
     dbc.Input(type="date",id="end_date",className="col-3 p-0")],className="mb-1"
   ),
-  dbc.Row(dbc.Button("Run Code",id="run_code",className=" btn btn-success float float-right"))
+
+  dbc.Row([dbc.Checklist(id="checkList",options=[{"label":"execute Code ?","value":True}],className="col-3 mr-1"),
+    dbc.Button("Run",id="run_code",className=" btn btn-success float float-right ")])
 
 ])
 
@@ -94,15 +96,16 @@ def create_figure(name,df,xCol,yCol,**kwargs):
   [State("stockdropdown",'value'),
   State("smaDropdown","value"),
   State("start_date",'value'),
-  State("end_date",'value')])
-def updateChart(btn,stock,sma_value,start_date,end_date):
+  State("end_date",'value'),
+  State("checkList",'value'),
+  State("code",'value'),
+  State("filename","children")])
+def updateChart(btn,stock,sma_value,start_date,end_date,check,code,filename):
   if btn == None:
+    print("update chart prevent update")
     raise PreventUpdate
   else:
-    # args = list(map(str,args))
-    # print(args)
-    # s = " - ".join(args)
-    # print(s)
+    
     if stock == None:
       return "Please select a stock name",True,{}
 
@@ -117,5 +120,37 @@ def updateChart(btn,stock,sma_value,start_date,end_date):
         df["sma-"+str(smaV)] = df["close"].rolling(window=smaV).mean()
         yCol.append('sma-'+str(smaV))
     
-    fig = create_figure(stock,df,'timestamp',yCol)
-    return "",False,fig
+    # print(check)
+    
+    if check!=None and len(check) > 0:
+      loc = "./tradingStrategies/tempScripts/"
+      F = open(loc+filename,'w')
+      # print("code is ",code)
+      F.write(code)
+      F.close()
+      print("code successfully saved @ ",loc)
+
+      try:
+        module = importlib.import_module('tradingStrategies.tempScripts.'+filename.split('.')[0])
+        module = importlib.reload(module)
+        scriptFunction = module.run
+        df.reset_index(drop=True,inplace=True)
+        df_otpt = pd.DataFrame(scriptFunction(df))
+        df_temp = pd.concat([df,df_otpt],axis=1)
+        # print(df_temp)
+        fig = create_figure(stock,df_temp,'timestamp',yCol   )
+        
+        buyData = df_temp[df_temp['actions']=='buy']
+        fig.add_trace(go.Scatter(name='buy',mode='markers',x=buyData['timestamp'],y=buyData['close'],
+        marker={'size':10}))
+
+        sellData = df_temp[df_temp['actions']=='sell']
+        
+        fig.add_trace(go.Scatter(name='sell',mode='markers',x=sellData['timestamp'],y=sellData['close'],
+        marker={'size':10}))
+        return "",False,fig
+      except Exception as e:
+        return str(e),True,{}
+    else:
+      fig = create_figure(stock,df,'timestamp',yCol)
+      return "",False,fig

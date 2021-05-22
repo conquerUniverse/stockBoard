@@ -208,5 +208,5 @@ def display_page(pathname):
 
 
 
-app.run_server(debug=True,threaded=True)
+app.run_server(debug=False,threaded=True)
 # server = app.server
