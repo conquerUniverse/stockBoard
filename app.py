@@ -1,6 +1,9 @@
-import dash
+
+from jupyter_dash import JupyterDash
 import dash_bootstrap_components as dbc
 
+
+import dash
 # bootstrap theme
 # https://bootswatch.com/lux/
 
@@ -8,7 +11,12 @@ import dash_bootstrap_components as dbc
 
 external_stylesheets = [dbc.themes.CYBORG]
 # SUPERHERO
-app = dash.Dash(__name__, 
+# app = dash.Dash(__name__, 
+# external_stylesheets=external_stylesheets,
+# suppress_callback_exceptions=True,
+# meta_tags=[{'name':"viewport","content":"width=device-width,initial-scale=1"}])
+
+app = JupyterDash(__name__,
 external_stylesheets=external_stylesheets,
 suppress_callback_exceptions=True,
 meta_tags=[{'name':"viewport","content":"width=device-width,initial-scale=1"}])

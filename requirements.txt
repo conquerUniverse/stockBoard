@@ -11,3 +11,5 @@ alpha_vantage
 gunicorn
 pandasql>=0.7.3
 dash_extensions
+dash-editor-components
+jupyter-dash

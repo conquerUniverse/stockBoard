@@ -88,7 +88,8 @@ navbar = dbc.Navbar(
                 navbar=True,
             ),
         ]
-        ,className="border border-info p-1 "
+        ,className="border border-info p-1 ",
+        fluid= True # it will take the entire screen, else there is huge padding associated with containers
     ),
     color="dark",
     dark=True,
@@ -174,7 +175,7 @@ def updateAccountBalance(n_clicks):
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     navbar,
-    dbc.Container(id='page-content',
+    dbc.Container(id='page-content',fluid=True,
     style={"overflow":"auto","height":"100%","marginBottom":"1%"}
     ),
     footer
