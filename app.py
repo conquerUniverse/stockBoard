@@ -8,7 +8,7 @@ import dash_bootstrap_components as dbc
 
 
 external_stylesheets = [dbc.themes.CYBORG]
-run_jupyterDash = False
+run_jupyterDash = True
 if run_jupyterDash:
     from jupyter_dash import JupyterDash
     app = JupyterDash(__name__,
