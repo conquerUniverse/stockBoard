@@ -7,7 +7,7 @@ import dash_table
 from dash.dependencies import Input, Output, State
 
 from app import app
-from AppData import updateData,dashBoard,analysis,charts,tradingStrategies
+from AppData import updateData,dashBoard,analysis,charts,tradingStrategies,tradeBot
 
 # stockBorad lib imports
 from scripts.StockBoard import StockBoard
@@ -78,6 +78,7 @@ navbar = dbc.Navbar(
             dbc.NavLink("Charts", href="/charts"),
             dbc.NavLink("UpdateData", href="/updatedata"),
             dbc.NavLink("Analysis", href="/analysis"),
+            dbc.NavLink("TradeBot", href="/tradeBot"),
             dbc.NavLink("Trading Strategies", href="/tradingstrategies"),
             dropdown
             ], className="ml-auto", 
@@ -194,6 +195,7 @@ def display_page(pathname):
             '/updatedata':updateData.getLayout(username),
             '/analysis':analysis.layout,
             '/charts':charts.layout,
+            '/tradeBot':tradeBot.layout,
             '/tradingstrategies':tradingStrategies.layout
             }
     try: 
@@ -205,5 +207,5 @@ def display_page(pathname):
 
 
 
-# app.run_server(debug=True)
-server = app.server
+app.run_server(debug=True)
+# server = app.server
