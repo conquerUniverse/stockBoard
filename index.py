@@ -110,66 +110,63 @@ def toggle_navbar_collapse(n, is_open):
         return not is_open
     return is_open
 
-
-
-
-footer = dbc.Navbar(
-    dbc.Row([dbc.Button("0",id="investmentVal",color="primary"), 
-    dbc.Button("0",id="accountBalance",color="primary"), 
-    dbc.Button("0",id="profitTillNow",color="success"), 
-    dbc.Button("0",id="totalBrokerage",color="danger"), 
+# footer = dbc.Navbar(
+#     dbc.Row([dbc.Button("0",id="investmentVal",color="primary"), 
+#     dbc.Button("0",id="accountBalance",color="primary"), 
+#     dbc.Button("0",id="profitTillNow",color="success"), 
+#     dbc.Button("0",id="totalBrokerage",color="danger"), 
     
     
 
 
-    dbc.Tooltip("Total Investment",target="investmentVal",placement="top"),
-    dbc.Tooltip("Demat Account Balance",target="accountBalance",placement="top"),
-    dbc.Tooltip("Total Profit Till Now",target="profitTillNow",placement="top"),
-    dbc.Tooltip("Total Brokerage ",target="totalBrokerage",placement="top")],
+#     dbc.Tooltip("Total Investment",target="investmentVal",placement="top"),
+#     dbc.Tooltip("Demat Account Balance",target="accountBalance",placement="top"),
+#     dbc.Tooltip("Total Profit Till Now",target="profitTillNow",placement="top"),
+#     dbc.Tooltip("Total Brokerage ",target="totalBrokerage",placement="top")],
     
 
-    justify="center"
+#     justify="center"
     
-    ,style={"width":"100%"}
-    ),
+#     ,style={"width":"100%"}
+#     ),
 
-    color="dark",
-    dark = True,
-    style = {"bottom":"0%","position":"fixed","width":"100%","height":"5%"}
-    )
+#     color="dark",
+#     dark = True,
+#     style = {"bottom":"0%","position":"fixed","width":"100%","height":"5%"}
+#     )
    
-@app.callback(
-    Output("investmentVal", "children"),Input("investmentVal", "n_clicks")
-)
-def updateInvestmentVal(n_clicks):
-    if n_clicks:
-        global sd
-        sb = StockBoard(sd)
-        val = round(sb.getInvestedValue(),3)
-        return val
-    return 0
+# @app.callback(
+#     Output("investmentVal", "children"),Input("investmentVal", "n_clicks")
+# )
+# def updateInvestmentVal(n_clicks):
+#     if n_clicks:
+#         global sd
+#         sb = StockBoard(sd)
+#         val = round(sb.getInvestedValue(),3)
+#         return val
+#     return 0
 
-@app.callback(
-    Output("totalBrokerage", "children"),Input("totalBrokerage", "n_clicks")
-)
-def updateTotalBrokerage(n_clicks):
-    if n_clicks:
-        global sd
-        sb = StockBoard(sd)
-        val = round(sb.getTotalBrokerage(),3)
-        return val
-    return 0
+# @app.callback(
+#     Output("totalBrokerage", "children"),Input("totalBrokerage", "n_clicks")
+# )
+# def updateTotalBrokerage(n_clicks):
+#     if n_clicks:
+#         global sd
+#         sb = StockBoard(sd)
+#         val = round(sb.getTotalBrokerage(),3)
+#         return val
+#     return 0
 
 
-@app.callback(
-    Output("accountBalance", "children"),Input("accountBalance", "n_clicks")
-)
-def updateAccountBalance(n_clicks):
-    if n_clicks:
-        global sd
-        sb = StockBoard(sd) # load the data files
-        return sb.getCurrBalance()
-    return 0
+# @app.callback(
+#     Output("accountBalance", "children"),Input("accountBalance", "n_clicks")
+# )
+# def updateAccountBalance(n_clicks):
+#     if n_clicks:
+#         global sd
+#         sb = StockBoard(sd) # load the data files
+#         return sb.getCurrBalance()
+#     return 0
 
 
 app.layout = html.Div([
@@ -208,5 +205,5 @@ def display_page(pathname):
 
 
 
-app.run_server(debug=False,threaded=True)
+app.run_server(debug=True,threaded=True)
 # server = app.server

@@ -20,7 +20,7 @@ import os, hashlib,configparser
 
 
 # global Variables
-sd,username = None,'Fahim'
+sd,username = None,None
 
 # loading password files
 config = configparser.ConfigParser()
@@ -103,7 +103,8 @@ def addStructuredData(category):
     nameAndDate = dbc.FormGroup(
             [   dbc.Row(
                 [dbc.Label("Name", className="mr-2",width = 4),
-                dbc.Input( placeholder="Enter Name",id="name")],                
+                dbc.Input( placeholder="Enter Name",id="name")
+                ],                
             style = {"width":"50%"} ),
                 dbc.Row(
                 [dbc.Label("Date", className="mr-2",width = 4),

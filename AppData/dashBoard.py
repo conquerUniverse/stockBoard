@@ -9,6 +9,11 @@ from dash.dependencies import Input, Output, State
 from scripts.StockBoard import StockBoard
 from scripts.StockData import StockData
 
+import plotly.express as px
+import plotly.graph_objects as go
+
+import pandas as pd
+
 # username = "alvin369"
 
 def tableView(data):
@@ -57,16 +62,42 @@ def tableView(data):
     )
     return dbc.Container(var)
 
+def getOverviewData(sb):
+    name_list = ["total Brokerage","total value invested","Demat Account Balance"]
+    tb = round(sb.getTotalBrokerage(),3)
+    iv = round(sb.getInvestedValue(),3)
+    cb = sb.getCurrBalance()
+    value_list = [tb,iv-cb,cb]
+    li = []
+    for i,j in zip(name_list,value_list):
+        d = {}; d["name"] = i; d["value"] = j
+        li.append(d)
+    return pd.DataFrame(li),'name','value'
+
+def getPieChart(df,name,value,**kwargs):
+    data = [go.Pie(labels = df[name],values=df[value],hole=.5)]
+    layout = go.Layout(title="Overview",paper_bgcolor = 'rgba(0,0,0,0)',
+            plot_bgcolor = 'rgba(0,0,0,0)',font ={'color':'white'})
+    fig = go.Figure(data = data,layout=layout,)
+    # fig = px.pie(df,values=xCol,names=yCol,**kwargs)
+    return fig
 
 def getLayout(user):
     sd = StockData(username=user) # default value 
     sd.load()
     stock = StockBoard(sd)
+    df_,name_,value_ = getOverviewData(stock)
+    fig = getPieChart(df_,name_,value_)
     layout = dbc.Card([
         dbc.CardHeader("Current Holdings"),
-        dbc.CardBody(tableView(stock.getCurrHoldings()))
+        dbc.CardBody(
+            dbc.Col([
+            dbc.Row(tableView(stock.getCurrHoldings())),
+            dbc.Container(dcc.Graph(id="overview_chart",figure=fig),className="row m-2 p-1")
+            ]))
     ],
     outline = True
         )
+
 
     return layout
