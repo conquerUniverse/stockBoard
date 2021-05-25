@@ -25,7 +25,7 @@ class StockBoard:
         df_sell = sd.Sell.BrokerageCost.sum()
         df_buy = sd.Buy.BrokerageCost.sum()
         df = sd.Invest
-        df_invest = -df[df.Description != 'add'].Amount.sum()
+        df_invest = df[df.Description == 'DP Charges'].Amount.sum()
         return df_sell+df_buy+df_invest
 
     def getCurrBalance(self,):
