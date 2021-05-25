@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 import dash_core_components as dcc
 import dash_table
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output,State
 from dash_extensions import Download
 from dash_extensions.snippets import send_data_frame
 
@@ -15,7 +15,7 @@ from scripts.StockData import StockData
 from app import app
 # general imports
 import os, hashlib,configparser
-
+import pandas as pd
 # noteToSelf = open(f"./profiles/{username}/noteToSelf.txt",'w+').read()
 
 
@@ -25,6 +25,16 @@ sd,username = None,None
 # loading password files
 config = configparser.ConfigParser()
 config.read('profiles/passwords.cfg')
+
+df_name = pd.read_csv("./data/symbolMapping.csv")
+stockNames = [{'label':i,'value':i} for i in df_name['symbol'].to_list()]
+stockNameDropdown = dcc.Dropdown(id='name', options=stockNames,
+            value = None,placeholder="select stock name", style={ 'color': 'black',
+                                      'background-color': 'white',
+                                      'width':'14em','padding':'0px','margin':'0px'
+                                    } )
+
+
 
 content = dbc.Card(
     [dbc.CardHeader(   
@@ -42,7 +52,8 @@ content = dbc.Card(
         dbc.Button("Download Data ",id="download_data",
         className="float-md-right btn col-2 btn-md ",outline=True)
      ],className="row" ),
-        # dcc.ConfirmDialog( id='messageSave' ),
+        dbc.Alert( id='messageSave',className="row",
+                  dismissable=True ,color="success"),
         dbc.CardBody(dbc.Container(id="tab-content", className="p-4")),
        Download(id="download"),
     ]
@@ -103,7 +114,7 @@ def addStructuredData(category):
     nameAndDate = dbc.FormGroup(
             [   dbc.Row(
                 [dbc.Label("Name", className="mr-2",width = 4),
-                dbc.Input( placeholder="Enter Name",id="name")
+                stockNameDropdown
                 ],                
             style = {"width":"50%"} ),
                 dbc.Row(
@@ -165,7 +176,8 @@ def addStructuredData(category):
    
     investForm = dbc.FormGroup(
             [   dbc.Row(
-                [dbc.Label("Amount", className="mr-2",width = 4),
+                [
+                    dbc.Label("Amount", className="mr-2",width = 4),
                 dbc.Input(type="number", placeholder="amount added ",id="amountInvest")],
                 
             style = {"width":"50%"} ),
@@ -178,7 +190,11 @@ def addStructuredData(category):
                 ),
                 dbc.Row(
                 [dbc.Label("Description", className="mr-2",width = 4),
-                dbc.Input(type='text',value="add",id="descInvest")] ,
+                dcc.Dropdown(id="descInvest",className="mr-2",style={'width':'14em','color':'black'},
+                    options=[{'label':i,'value':i} for i in ['add','withdraw','DP Charges','Dividend','other']]),
+                
+                # dbc.Input(type='text',value="add",id="descInvest")
+                ] ,
 
             style = {"width":"50%"} 
                 )
@@ -195,7 +211,7 @@ def addStructuredData(category):
     
 
     password = dbc.Input(type="text", placeholder="PLs. enter Passwd",id="password")                 
-    saveData = dbc.Button("Save Data", color="success",n_clicks = 0,id="saveData")
+    saveData = dbc.Button("Save Data", color="success",id="saveData")
     
     buySellForm = html.Div(dbc.FormGroup([nameAndDate, numberAndPriceOfStock,totalCostAndExtraCharge]),id="buySellForm")
     investForm = html.Div(dbc.FormGroup([investForm,]),id="investForm",hidden=True)
@@ -205,16 +221,18 @@ def addStructuredData(category):
 
 # save Data
 @app.callback(
-    [Output("messageSave","message"),Output("messageSave","displayed")],
-    [Input("saveData","n_clicks"),
-    Input("tabs","active_tab")
-    ]
+    [Output("messageSave","message"),Output("messageSave","is_open")],
+    Input("saveData","n_clicks") ,
+    State("tabs","active_tab")
 )
 def saveDataCallBack(_,category):
-    if not  _:
+    if _ == None:
+        print("not saving file")
         return "all Fine",False
     else:
+        # print("updating the real file statring")
         sd.updateData(category=category)
+        # print("updating the real file")
         return category+" Values updated Successfully",True
 
 

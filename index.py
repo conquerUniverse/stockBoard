@@ -25,7 +25,7 @@ usernames = [i for i in os.listdir("./profiles/") if isUser(i)]
 
 
 
-username = 'alvin369'
+username = None
 sd = None # stock data dataframe
 
 
