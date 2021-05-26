@@ -49,10 +49,39 @@ sma = dcc.Dropdown(multi=True,id="smaDropdown",
   options = [{'label':i,'value':i} for i in sma_list],className="w-100 ")
 
 def create_figure(name,df,xCol,yCol,**kwargs):
-    fig = px.line(  df,x=xCol, y=yCol,
-                                    title=f'{name} Chart',**kwargs
-                                  )
-    fig.update_layout(margin=dict(l=0,r=0,b=0))
+    # fig = go.Figure(data=[go.Candlestick(x=df[xCol],
+    #             open=df['open'],
+    #             high=df['high'],
+    #             low=df['low'],
+    #             close=df['close'],
+    #             # title=f'{name} Chart'
+    #             ) ])
+    fig = px.line( df,x=xCol, y=yCol,
+    #  title=f'{name} Chart',**kwargs
+                                    )
+
+
+    # fig  = go.Figure(data=[go.Line( x=df[xCol], y=df[[yCol]],
+    #                                   # title=f'{name} Chart',**kwargs
+    #                                 )])
+    # if yCol is not None and len(yCol) > 0 :
+    #   fig.add_trace(go.scatter.Line( x=df[xCol], y=df[yCol],
+    #                                   # title=f'{name} Chart',**kwargs
+    #                                 ))
+    fig.update_layout(title =f'{name} Chart', margin=dict(l=0,r=0,b=0))
+    fig.update_yaxes(fixedrange=False)
+    fig.update_xaxes(rangeslider_visible=False,
+    # rangebreaks=[
+    #     dict(bounds=["sun", "mon"])],
+    rangeselector=dict(
+        buttons=list([
+            dict(count=1, label="1m", step="month", stepmode="backward"),
+            dict(count=6, label="6m", step="month", stepmode="backward"),
+            dict(count=1, label="YTD", step="year", stepmode="todate"),
+            dict(count=1, label="1y", step="year", stepmode="backward"),
+            dict(step="all")
+        ])
+        ))
     return fig
 
 
@@ -72,6 +101,7 @@ def update_figure(selected_value,sma_value,start_date,end_date,strategyButton,st
     if end_date is not None:
       df = df[df.timestamp <= end_date]
     yCol = ['close']
+    # yCol = []
     if sma_value is not None:
       for smaV in sma_value:
         df["sma-"+str(smaV)] = df["close"].rolling(window=smaV).mean()
