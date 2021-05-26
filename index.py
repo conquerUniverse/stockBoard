@@ -43,27 +43,28 @@ dropdown = dcc.Dropdown(
     # nav = True,
     # in_navbar = True,
     id = 'login',
-    style={'width':'8em'}
+    style={'width':'8em'},
+    value="alvin369",
     # label = "Login",
     # color="Info"    
 )
 
-@app.callback(
-    Output('login', 'label'),
-    [Input('login', 'n_clicks')])
-def updateUserID(*args):
-    ctx = dash.callback_context
-    if not any(args):
-        return "Login"
-    # this gets the id of the button that triggered the callback
-    username = ctx.triggered[0]["prop_id"].split(".")[0]
-    # global username,sd
-    # username = button_id
-    print("clicked ",username)
+# @app.callback(
+#     Output('login', 'value'),
+#     [Input('login', 'n_clicks')])
+# def updateUserID(*args):
+#     ctx = dash.callback_context
+#     if not any(args):
+#         return "Login"
+#     # this gets the id of the button that triggered the callback
+#     username = ctx.triggered[0]["prop_id"].split(".")[0]
+#     # global username,sd
+#     # username = button_id
+#     print("clicked ",username)
 
-    sd = StockData(username=username) 
-    sd.load() # load the Data files
-    return button_id
+#     sd = StockData(username=username) 
+#     sd.load() # load the Data files
+#     return button_id
 
 
             
