@@ -98,6 +98,8 @@ def update_figure(selected_value,sma_value,start_date,end_date,strategyButton,st
     df = pd.read_csv(f"./data/stockData/daily/{selected_value}.csv")
     if start_date is not None:
       df = df[df.timestamp >= start_date]
+    else:
+      df = df[df.timestamp >= '2020-06-05']
     if end_date is not None:
       df = df[df.timestamp <= end_date]
     yCol = ['close']
