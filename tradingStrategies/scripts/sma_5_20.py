@@ -20,11 +20,7 @@ def run(df):
         d = {}
         d["actions"] = ''
         d['quantity'] = 0
-        # trans+=1
-
-        # if trans < 10:
-        #     res.append(d)
-        #     continue
+        d["timestamp"] = df.iloc[i]['timestamp']
 
         if df[long].iloc[i] >= df[short].iloc[i] and state != 'buy':
             d["actions"] = 'buy'
@@ -38,9 +34,8 @@ def run(df):
             state = 'sell'
             currAmount -= min(qty,currAmount)
             trans = 0
-            
-        if d['quantity'] == 0:
-            d['actions'] = ''
+        else:
+            continue  
         res.append(d)
     return res
         

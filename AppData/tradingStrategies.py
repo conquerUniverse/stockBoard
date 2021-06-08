@@ -50,19 +50,6 @@ popUpResult =  dbc.Modal(
             id="modalResult",style={'minWidth':'90%'}
         )
 
-# dynamically generate the strategies code
-pageBody = dbc.CardBody([dbc.Row([
-    dbc.Col(dbc.Label(i),className=" col-md-6 col-lg-8 col-sm-6 col-xs-12 p-0 m-0"),
-    dbc.Col(dbc.Button("Details",id=i,className="btn btn-block "),className="h6 col-md-3 col-lg-2 col-sm-3 col-xs-12 p-0 m-0  m-xs-0"),
-    dbc.Col(dbc.Button("Show Code", id=i+"_code",className="btn btn-block"),className="h6 col-md-3 col-lg-2 col-sm-3 col-xs-12 p-0 m-0  m-xs-0")
-]
-,no_gutters=True,justify="around",className="border mb-1 row-fluid "+np.random.choice(border_color)) for i in scripts_name])
-
-layout = dbc.Container([
-    dbc.Card([pageHeader,pageBody],outline=True,className="w-100 p-0 m-0"),popUp,popUpResult]
-    ,fluid=True,className="w-100 p-0 m-0")
-
-
     
 @app.callback(
     [Output("modalHeader", "children"),
@@ -116,3 +103,15 @@ def toggle_modal_result(is_open,*args):
     style_cell ={'backgroundColor':'black'}, )
     )
     return changed+" - "+str(len(df)),performance,True
+
+# dynamically generate the strategies code
+pageBody = dbc.CardBody([dbc.Row([
+    dbc.Col(dbc.Label(i),className=" col-md-6 col-lg-8 col-sm-6 col-xs-12 p-0 m-0"),
+    dbc.Col(dbc.Button("Details",id=i,className="btn btn-block "),className="h6 col-md-3 col-lg-2 col-sm-3 col-xs-12 p-0 m-0  m-xs-0"),
+    dbc.Col(dbc.Button("Show Code", id=i+"_code",className="btn btn-block"),className="h6 col-md-3 col-lg-2 col-sm-3 col-xs-12 p-0 m-0  m-xs-0")
+]
+,no_gutters=True,justify="around",className="border mb-1 row-fluid "+np.random.choice(border_color)) for i in scripts_name])
+
+layout = dbc.Container([
+    dbc.Card([pageHeader,pageBody],outline=True,className="w-100 p-0 m-0"),popUp,popUpResult]
+    ,fluid=True,className="w-100 p-0 m-0") 

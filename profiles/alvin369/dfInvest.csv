@@ -1,14 +1,18 @@
 Amount,Date,Description
+-23.6,2021-06-04,other
+-94.4,2021-06-03,other
+-47.2,2021-05-28,other
 20000.0,2021-05-21,add
+-23.6,2021-05-20,other
 -70.8,2021-05-15,other
 100.0,2021-05-09,Dividend
 -23.6,2021-05-05,DP Charges
 -27832.86,2021-04-12,withdraw
 550.0,2021-03-24,Dividend
 53.0,2021-03-06,Dividend
--23.6,2021-03-04,DP Charges
--424.8,2021-03-04,DP Charges
 320.0,2021-03-04,Dividend
+-424.8,2021-03-04,DP Charges
+-23.6,2021-03-04,DP Charges
 -23.6,2021-03-02,DP Charges
 -23.6,2021-02-23,DP Charges
 6000.0,2021-02-13,add

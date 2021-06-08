@@ -98,6 +98,8 @@ def update_figure(selected_value,sma_value,start_date,end_date,strategyButton,st
     df = pd.read_csv(f"./data/stockData/daily/{selected_value}.csv")
     if start_date is not None:
       df = df[df.timestamp >= start_date]
+    else:
+      df = df[df.timestamp >= '2020-06-05']
     if end_date is not None:
       df = df[df.timestamp <= end_date]
     yCol = ['close']
@@ -117,7 +119,8 @@ def update_figure(selected_value,sma_value,start_date,end_date,strategyButton,st
       scriptFunction = module.run
       df.reset_index(drop=True,inplace=True)
       df_otpt = pd.DataFrame(scriptFunction(df))
-      df_temp = pd.concat([df,df_otpt],axis=1)
+      df_temp = pd.merge(df,df_otpt,how='left',on='timestamp')
+      # df_temp = pd.concat([df,df_otpt],axis=1)z
       
       fig = create_figure(selected_value,df_temp,'timestamp',yCol   )
       

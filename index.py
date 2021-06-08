@@ -15,6 +15,7 @@ from scripts.StockData import StockData
 
 # general imports
 import os
+import importlib
 
 def isUser(name):
     if name.lower() not in ("readme.md","passwords.cfg"):
@@ -127,7 +128,7 @@ app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     navbar,
     dbc.Container(id='page-content',fluid=True,
-    style={"overflow":"auto","height":"90%","marginBottom":"1%"}
+    style={"overflow":"auto","height":"100%","marginBottom":"1%"}
     ),
     # footer
 ],
@@ -142,7 +143,9 @@ def display_page(pathname,username):
     # global username
     if not username:
         return html.Div([html.H1('Please Select an userID and click the tab')])
-
+    
+    module = importlib.import_module('AppData.tradingStrategies')
+    tradingStrategies = importlib.reload(module)
     linkToPage = {
             '/':dashBoard.getLayout(username),
             '/updatedata':updateData.getLayout(username),
