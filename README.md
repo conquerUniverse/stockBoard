@@ -26,8 +26,10 @@ pip install -r requirements.txt
 
 # Tasks
 - [x] Learn Dash
-- [ ] Link the API (still stuck)
-- [ ] Test the Funcitonality
+- [x] Link the API (still stuck)
+- [x] Test the Funcitonality
+- [ ] Automatic data update
+- [ ] trading strategies
 
 
 
