@@ -36,5 +36,5 @@ class RandomStrategy:
 
         return res
 
-rs = RandomStrategy(5)
+rs = RandomStrategy()
 run = rs.run
