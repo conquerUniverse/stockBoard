@@ -114,7 +114,10 @@ def getLayout(user):
             dbc.Container([
                 dcc.Graph(id="overview_chart",figure=fig,className="col"),
                 dcc.Graph(id="invest_chart",figure=fig_invest,className="col")
-                ],className="row m-2 p-1")
+                
+                ],className="row m-2 p-1"),
+            dbc.Label(f"Profit Value {stock.getProfitValue()}",className="h3 success ",style={'color':'green'})
+               
             
             ]))
     ],

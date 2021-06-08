@@ -10,7 +10,7 @@ class BackTest:
         self.stockVal = 'close'
         self.scriptPath = "scripts"
         self.savePath = "results"
-        self.importSource = 'tradingStrategies.scripts.random'
+        self.importSource = 'tradingStrategies.scripts.'
         
     def parseAction(self,a):
         a = a.lower()
@@ -18,7 +18,7 @@ class BackTest:
             return a
         return ''
     
-    def getTradeSummary(self,df,trades):
+    def getTradeSummary(self,df):
         totalBuy = 0
         totalSell = 0
         totalInvestment = 0
@@ -26,12 +26,13 @@ class BackTest:
         NumberOfTrades = 0
         stocksInHand = 0 # shorting is not allowed
         
-        assert len(df) == len(trades),"len of trade should be equal to stock result"
+        # assert len(df) == len(trades),"len of trade should be equal to stock result"
         L = len(df)
         
         for i in range(L):
-            trade = trades[i]
+            # trade = trades[i]
             stock = df.iloc[i]
+            trade = df[['actions','quantity']].iloc[i].to_dict()
             
             action = self.parseAction(trade['actions'])
             qty  = int(0 if trade['quantity'] == '' else trade['quantity'])
@@ -76,11 +77,17 @@ class BackTest:
     def backtest(self,scriptName,df):
         """scriptFunciton import and pass it 
         stocksList if empty will pick all the stocks else only the provided ones"""
-        
-        module = importlib.import_module(self.importSource)
-        # module = importlib.import_module(self.importSource+scriptName)
-        scriptFunction = module.run
-        trades = scriptFunction(df)
-        res = self.getTradeSummary(df,trades)
+        if type(scriptName) == type(''):
+            # module = importlib.import_module(self.importSource)
+            module = importlib.import_module(self.importSource+scriptName)
+            scriptFunction = module.run
+        else:
+            scriptFunction = scriptName # funtion is provided in input directly
+        trades = pd.DataFrame(scriptFunction(df))
+        # print(trades)
+        # print("col name in bac1111kgtets",trades.columns)
+        trades = pd.merge(df,trades,how='inner',on='timestamp')
+
+        res = self.getTradeSummary(trades)
         # res["name"] = i.split('.')[0]
         return res
