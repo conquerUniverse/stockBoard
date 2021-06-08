@@ -49,16 +49,16 @@ sma = dcc.Dropdown(multi=True,id="smaDropdown",
   options = [{'label':i,'value':i} for i in sma_list],className="w-100 ")
 
 def create_figure(name,df,xCol,yCol,**kwargs):
-    # fig = go.Figure(data=[go.Candlestick(x=df[xCol],
-    #             open=df['open'],
-    #             high=df['high'],
-    #             low=df['low'],
-    #             close=df['close'],
-    #             # title=f'{name} Chart'
-    #             ) ])
-    fig = px.line( df,x=xCol, y=yCol,
+    fig = go.Figure(data=[go.Candlestick(x=df[xCol],
+                open=df['open'],
+                high=df['high'],
+                low=df['low'],
+                close=df['close'],
+                # title=f'{name} Chart'
+                ) ])
+    # fig = px.line( df,x=xCol, y=yCol,
     #  title=f'{name} Chart',**kwargs
-                                    )
+                                    # )
 
 
     # fig  = go.Figure(data=[go.Line( x=df[xCol], y=df[[yCol]],
@@ -126,12 +126,12 @@ def update_figure(selected_value,sma_value,start_date,end_date,strategyButton,st
       
       buyData = df_temp[df_temp['actions']=='buy']
       fig.add_trace(go.Scatter(name='buy',mode='markers',x=buyData['timestamp'],y=buyData['close'],
-      marker={'size':10}))
+      marker={'size':10}, marker_color='blue'))
 
       sellData = df_temp[df_temp['actions']=='sell']
       
       fig.add_trace(go.Scatter(name='sell',mode='markers',x=sellData['timestamp'],y=sellData['close'],
-      marker={'size':10}))
+      marker={'size':10}, marker_color='yellow'))
       return fig
 
     else:

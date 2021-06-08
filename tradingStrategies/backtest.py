@@ -28,6 +28,7 @@ class BackTest:
         
         # assert len(df) == len(trades),"len of trade should be equal to stock result"
         L = len(df)
+
         
         for i in range(L):
             # trade = trades[i]
@@ -59,15 +60,7 @@ class BackTest:
         ans["totalBuy"] = totalBuy
         ans["totalSell"] = totalSell
         ans["currentStocksInHandValue"] = 0
-        ans["stockGrowth"] = 100*(df.iloc[-1][self.stockVal] - df.iloc[0][self.stockVal])/df.iloc[0][self.stockVal]
-#         print(df.iloc[-1][self.stockVal],stocksInHand,"stocks in hand")
-        if stocksInHand > 0:
-            ans["currentStocksInHandValue"] = df.iloc[-1][self.stockVal]*stocksInHand
-        try:
-            ans["profitPercent"] = (ans["totalNetWorth"]+ans["currentStocksInHandValue"]
-                              -ans["totalInvestment"])/ans["totalInvestment"]
-        except:
-            ans["profitPercent"] = 0
+        ans['stocksInHand']  = stocksInHand
         return ans
         
     def getScriptsName(self):
@@ -89,5 +82,15 @@ class BackTest:
         trades = pd.merge(df,trades,how='inner',on='timestamp')
 
         res = self.getTradeSummary(trades)
-        # res["name"] = i.split('.')[0]
+
+        res["stockGrowth"] = (df.iloc[-1][self.stockVal] - df.iloc[0][self.stockVal])/df.iloc[0][self.stockVal]
+
+        if res['stocksInHand'] > 0:
+            res["currentStocksInHandValue"] = df.iloc[-1][self.stockVal]*res['stocksInHand']
+        try:
+            res["profitPercent"] = (res["totalNetWorth"]+res["currentStocksInHandValue"]
+                              -res["totalInvestment"])/res["totalInvestment"]
+        except:
+            res["profitPercent"] = 0
+
         return res
