@@ -8,7 +8,7 @@ def run(df):
     qty = 10
     currAmount = 0
 
-    print("running sma ",window_short,window_long)
+    # print("running sma ",window_short,window_long)
     
     state = ''
 

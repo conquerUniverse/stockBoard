@@ -7,8 +7,8 @@ tools to analyse stock market and further research
 
 conda create -n dash python
 conda activate dash
-python index.py
 pip install -r requirements.txt 
+python index.py
 
 ```
 - go to the link http://127.0.0.1:8050/
