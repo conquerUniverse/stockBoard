@@ -76,7 +76,7 @@ navbar = dbc.Navbar(
         [
             dbc.Row(
                 [
-                    dbc.Col(dbc.NavbarBrand("StockBoard", className="ml-2")),
+                    dbc.Col(dbc.NavbarBrand("Cortex Bot", className="ml-2")),
                 ],
                 align="center",
                 no_gutters=True,
