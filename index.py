@@ -45,7 +45,7 @@ dropdown = dcc.Dropdown(
     # in_navbar = True,
     id = 'login',
     style={'width':'8em'},
-    value="fahim",
+    value="alvin369",
     # label = "Login",
     # color="Info"    
 )
@@ -163,5 +163,5 @@ def display_page(pathname,username):
 
 
 
-# app.run_server(debug=False,threaded=True)
+# app.run_server(debug=True,threaded=True)
 server = app.server
