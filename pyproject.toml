@@ -28,9 +28,12 @@ asyncio = "^3.4.3"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
 pytest-remotedata = "^0.3.2"
-flake8 = "^3.9.2"
 mypy = "^0.902"
 black = "^21.6b0"
+autopep8 = "^1.5.7"
+
+[tool.autopep8]
+max_line_length = 88
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
