@@ -2,7 +2,7 @@
 name = "stockboard"
 version = "0.1.0"
 description = "Algorithmic trading bot"
-authors = ["Pankaj Pundir", "Rahul Goswami <irg8979@gmail.com>", "Ravi Singh Patel", "Deepak Singh"]
+authors = ["Pankaj Pundir", "Rahul Goswami <irg8979@gmail.com>", "Ravi Singh Patel <replysinghravi@gmail.com>", "Deepak Singh"]
 license = "MIT"
 
 [tool.poetry.dependencies]
@@ -22,6 +22,8 @@ dash-editor-components = "^0.0.2"
 jupyter-dash = "^0.4.0"
 matplotlib = "^3.4.2"
 ta = "^0.7.0"
+yfinance = "^0.1.59"
+asyncio = "^3.4.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
