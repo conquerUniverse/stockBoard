@@ -619,6 +619,10 @@ name = "multitasking"
 version = "0.0.9"
 description = "Non-blocking Python methods using decorators"
 category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "mypy"
 version = "0.902"
 description = "Optional static typing for Python"
@@ -1096,7 +1100,7 @@ requests = ">=2.20"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "88a2fa9b925495b734e0c4ca4f021eb164b21494a3bf6e7edb9c6159d4521349"
+content-hash = "f5e3508c69fc5229179a2f609ef0607f0e1fa1bee5a9514aa6b501405bde2071"
 
 [metadata.files]
 aiohttp = [
@@ -1625,6 +1629,7 @@ multidict = [
 ]
 multitasking = [
     {file = "multitasking-0.0.9.tar.gz", hash = "sha256:b59d99f709d2e17d60ccaa2be09771b6e9ed9391c63f083c0701e724f624d2e0"},
+]
 mypy = [
     {file = "mypy-0.902-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:3f12705eabdd274b98f676e3e5a89f247ea86dc1af48a2d5a2b080abac4e1243"},
     {file = "mypy-0.902-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:2f9fedc1f186697fda191e634ac1d02f03d4c260212ccb018fabbb6d4b03eee8"},
