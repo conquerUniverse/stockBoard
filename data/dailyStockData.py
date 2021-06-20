@@ -7,7 +7,7 @@ col_map = {
     "High": "high",
     "Low": "low",
     "Close": "close",
-    "Volume": "volume",
+    "Volume":"volume",
 }
 
 
