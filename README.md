@@ -13,6 +13,11 @@ python index.py
 ```
 - go to the link http://127.0.0.1:8050/
 
+Or setup [poetry](https://python-poetry.org/docs/#installation), and run
+```bash
+poetry install
+```
+
 # how to
 - how to read a funciton form a string and treat it as a module.
 
@@ -27,7 +32,7 @@ python index.py
 # Tasks
 - [x] Learn Dash
 - [x] Link the API (still stuck)
-- [x] Test the Funcitonality
+- [x] Test the Functionality
 - [ ] Automatic data update
 - [ ] trading strategies
 
