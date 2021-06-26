@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "stockboard"
+version = "0.1.0"
+description = "Algorithmic trading bot"
+authors = ["Pankaj Pundir", "Rahul Goswami <irg8979@gmail.com>", "Ravi Singh Patel <replysinghravi@gmail.com>", "Deepak Singh"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pandas = "^1.2.4"
+dash = "^1.20.0"
+dash-core-components = "^1.16.0"
+dash-html-components = "^1.1.3"
+dash-renderer = "^1.9.1"
+dash-table = "^4.11.3"
+dash-bootstrap-components = "^0.12.2"
+alpha-vantage = "^2.3.1"
+gunicorn = "^20.1.0"
+pandasql = "^0.7.3"
+dash-extensions = "^0.0.56"
+dash-editor-components = "^0.0.2"
+jupyter-dash = "^0.4.0"
+matplotlib = "^3.4.2"
+ta = "^0.7.0"
+yfinance = "^0.1.59"
+asyncio = "^3.4.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+pytest-remotedata = "^0.3.2"
+mypy = "^0.902"
+black = "^21.6b0"
+autopep8 = "^1.5.7"
+
+[tool.autopep8]
+max_line_length = 88
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
