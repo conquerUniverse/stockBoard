@@ -1,0 +1,1 @@
+web: gunicorn index:server --preload --timeout 7 --workers 8
