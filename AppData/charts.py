@@ -12,6 +12,7 @@ import plotly.graph_objects as go
 import pandas as pd
 import os
 import importlib
+import subprocess
 
 from tradingStrategies.backtest import BackTest
 
@@ -235,6 +236,14 @@ def getAnalysisResult(_, strategyName, stockName):
 
 table_header = dbc.Col(
     [
+        dbc.Alert(
+    "status is working",
+    color="success",
+    id="alert_data",
+    className="row",
+    dismissable=True,
+    is_open=False,
+        ),
         dbc.Row(
             [
                 html.Div(dp, className="col-2  p-0 mr-2"),
@@ -254,12 +263,28 @@ table_header = dbc.Col(
                     id="strategy_trade",
                     className="btn-primary btn-sm col-1 mt-1 col-xs-5 w-auto",
                 ),
+                dbc.Button(
+                    "Update Stock Data",
+                    id="update_stock_data",
+                    className="btn-success p-1 m-1 btn-sm ml-auto w-auto",
+                ),
             ]
         ),
         html.Div(id="analysisResult", className="row"),
     ]
     # ,className="col-12"
 )
+
+
+@app.callback([Output('alert_data','children'),Output('alert_data','is_open')],
+        Input('update_stock_data','n_clicks'))
+def runGetDataScript(_):
+    if _ is None:
+        raise PreventUpdate
+        # python data/getStockData.py --verbose -D -S data/stockData/daily 
+    argument = ['python','data/getStockData.py','--verbose','-D','-S' ,'data/stockData/daily']
+    subprocess.Popen(argument)
+    return 'Retrieving data Script started',True
 
 layout = dbc.Card(
     [dbc.CardHeader(table_header, className="border border-danger"), dbc.CardBody(g)],
