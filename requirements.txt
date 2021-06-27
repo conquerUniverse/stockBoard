@@ -15,3 +15,5 @@ dash-editor-components
 jupyter-dash
 matplotlib
 ta
+termcolor
+argparse
