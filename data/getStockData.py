@@ -69,12 +69,15 @@ def storeData(stockName, path=args.savepath):
         stockDataFrame = dataframe.rename(columns=col_map)
         stockDataFrame = stockDataFrame[["open", "high", "low", "close", "volume"]]
         
+        if len(stockDataFrame) > 0:
+            stockDataFrame.to_csv(os.path.join(path,stockName + ".csv"),
+            mode ='a',header=False)
+            if args.verbose:
+                cprint(f"SUCCESS : {stockName.upper()}",'green')
+        else:
+            cprint(f"SKIPPING : {stockName.upper()}",'red')
         
-        stockDataFrame.to_csv(os.path.join(path,stockName + ".csv"),
-            mode ='w',header=False)
         
-        if args.verbose:
-            cprint(f"SUCCESS : {stockName.upper()}",'green')
     except:
         if args.verbose:
             cprint(f"FAILED : {stockName.upper()}",'red')
@@ -96,11 +99,11 @@ def getStockData():
     savingPath = args.savepath #os.path.join(os.getcwd(),args.savepath)
     allStockSymbols = [
         stockSymbol.split(".csv")[0] for stockSymbol in os.listdir(nameFindpath)
-    ][:16]
+    ]
     if args.verbose:
         cprint(f"path {savingPath}",'yellow')
 
-    with ThreadPoolExecutor(max_workers=5,thread_name_prefix='get_data_') as pool:
+    with ThreadPoolExecutor(max_workers=16,thread_name_prefix='get_data_') as pool:
         results = pool.map(storeData, allStockSymbols)
     return len(allStockSymbols)
 
