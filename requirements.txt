@@ -17,3 +17,5 @@ matplotlib
 ta
 termcolor
 argparse
+asyncio
+yfinance
