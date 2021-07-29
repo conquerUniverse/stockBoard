@@ -162,5 +162,5 @@ def display_page(pathname, username):
         return html.Div([html.H1("Page Is Broken.. :( {}".format(pathname))])
 
 
-# app.run_server(debug=True,threaded=True)
-server = app.server
+app.run_server(debug=True,threaded=True)
+# server = app.server
