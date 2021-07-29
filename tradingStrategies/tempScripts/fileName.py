@@ -1,35 +1,36 @@
+# ------------------- Insturctions -----------------
+# using complete dataframe
+# return a dataframe with columns
+# timestamp ,actions ,quantity
+# timestamp -> date in YYYY-MM-DD
+# actions -> ['buy','sell'] @string format
+# quantity -> integer value
+# if you dont want to do any action .. you can skip that dataframe.
+
 import numpy as np
 import pandas as pd
-from ta.momentum import RSIIndicator
 
 
-class RSIStrategy:
+class RandomStrategy:
     def __init__(self):
-        self.overbought = 70
-        self.oversold = 30
+        pass
 
     def run(self, df):
-        rsi_indicator = RSIIndicator(df["close"], 14)
-        df["RSI"] = rsi_indicator.rsi()  # added a column with RSI osscilator
-
         res = []
         current_stock = 0
         lim = 100
         for i in range(len(df)):
-            frame = df.iloc[i]
             d = {}
-            d["timestamp"] = frame["timestamp"]
-            #             print("fram rsi ",frame['RSI'])
-            if frame["RSI"] <= self.oversold:
-                d["actions"] = "buy"
-                d["quantity"] = lim  # np.random.randint(0,lim,1)[0]
-                current_stock += d["quantity"]
+            d["actions"] = np.random.choice(["buy", "sell", ""], p=[0.15, 0.1, 0.75])
+            d["quantity"] = 0
+            d["timestamp"] = df.iloc[i]["timestamp"]
 
-            elif frame["RSI"] >= self.overbought and current_stock > lim:
-                d["actions"] = "sell"
-                d["quantity"] = lim  # np.random.randint(,current_stock,1)[0]
+            if d["actions"].lower() == "sell" and current_stock > 0:
+                d["quantity"] = np.random.randint(0, current_stock, 1)[0]
                 current_stock -= d["quantity"]
-
+            elif d["actions"].lower() == "buy":
+                d["quantity"] = np.random.randint(0, lim, 1)[0]
+                current_stock += d["quantity"]
             else:
                 continue
             res.append(d)
@@ -37,5 +38,5 @@ class RSIStrategy:
         return res
 
 
-rs = RSIStrategy()
+rs = RandomStrategy()
 run = rs.run

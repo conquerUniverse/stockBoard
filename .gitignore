@@ -22,3 +22,4 @@ scripts/__pycache__/StockBoard.cpython-37.pyc
 build
 dist
 data/stockData/*
+tradingStrategies/tempScripts/*
